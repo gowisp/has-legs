@@ -1,0 +1,12 @@
+<svg class="art-round" viewBox="0 0 420 190" role="img" aria-label="A wide stage backdrop in green with the same rising arcs and the line The next ten years.">
+  <rect width="420" height="190" fill="#1F5D4C"/>
+  <path d="M200 190A150 150 0 0 1 500 190z" fill="#D9653B"/>
+  <path d="M238 190A112 112 0 0 1 462 190z" fill="#F3E9D8"/>
+  <path d="M276 190A74 74 0 0 1 424 190z" fill="#174638"/>
+  <path d="M314 190A36 36 0 0 1 386 190z" fill="#D9653B"/>
+  <text x="24" y="66" class="o-syne" font-size="23" font-weight="800" fill="#F3E9D8">The next</text>
+  <text x="24" y="94" class="o-syne" font-size="23" font-weight="800" fill="#F3E9D8">ten years.</text>
+  <rect x="24" y="112" width="60" height="4" fill="#D9653B"/>
+  <text x="24" y="150" class="o-syne" font-size="8.5" font-weight="600" letter-spacing="1.1" fill="#F3E9D8">OKAVI ENERGY</text>
+  <text x="24" y="164" class="o-syne" font-size="8.5" font-weight="600" letter-spacing="1.1" fill="#F3E9D8" opacity="0.8">STAFF CONFERENCE 2027</text>
+</svg>

@@ -1,0 +1,13 @@
+<svg class="walker" viewBox="0 0 220 220" aria-hidden="true">
+  <line class="ground" x1="14" y1="206" x2="206" y2="206"/>
+  <path class="leg la" d="M99 150V202h12"/>
+  <path class="leg lb" d="M121 150V202h12"/>
+  <g class="body">
+    <path class="b-card" d="M88 72 110 26l22 46v80H88z" stroke-linejoin="round"/>
+    <path class="b-ink" d="M102 43l8-17 8 17z"/>
+    <path class="b-tick" d="M88 72h44M103 72v58M117 72v58"/>
+    <rect class="b-hot-o" x="88" y="130" width="44" height="22" rx="4"/>
+    <path class="b-hot" d="M170 44c2.4 12 7.2 16.8 19.200 19.200-12 2.400-16.800 7.200-19.200 19.200-2.400-12-7.200-16.800-19.200-19.200 12-2.400 16.800-7.200 19.200-19.200z"/>
+    <path class="b-ink" d="M52 96c1.200 6 3.600 8.400 9.600 9.600-6 1.200-8.400 3.600-9.600 9.600-1.200-6-3.600-8.400-9.600-9.600 6-1.200 8.400-3.600 9.600-9.600z"/>
+  </g>
+</svg>

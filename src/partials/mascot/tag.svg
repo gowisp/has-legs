@@ -1,0 +1,12 @@
+<svg class="walker" viewBox="0 0 220 220" aria-hidden="true">
+  <line class="ground" x1="14" y1="206" x2="206" y2="206"/>
+  <path class="leg la" d="M100 148V202h12"/>
+  <path class="leg lb" d="M142 148V202h12"/>
+  <g class="body">
+    <path class="b-wave" d="M70 99Q34 70 62 28" stroke-width="2.5"/>
+    <path class="b-card" d="M78 48h96a12 12 0 0 1 12 12v78a12 12 0 0 1-12 12H78L38 99z" stroke-linejoin="round"/>
+    <circle class="b-hot" cx="72" cy="99" r="9"/>
+    <rect class="b-ink" x="102" y="80" width="64" height="11" rx="5.5"/>
+    <rect class="b-mute" x="102" y="104" width="40" height="11" rx="5.5"/>
+  </g>
+</svg>

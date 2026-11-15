@@ -1,0 +1,19 @@
+<svg class="art-round" viewBox="0 0 240 340" role="img" aria-label="A campaign poster for Tumble Soda: a white can tumbling across a yellow circle on bright blue, with the line Tumble into summer.">
+  <rect width="240" height="340" fill="#2447F9"/>
+  <text x="20" y="34" class="t-rubik" font-size="11" font-weight="700" letter-spacing="1.5" fill="#FFFFFF">TUMBLE SODA</text>
+  <circle cx="150" cy="130" r="72" fill="#FFE14A"/>
+  <g transform="rotate(22 150 130)">
+    <rect x="135" y="72" width="30" height="8" rx="3" fill="#C9D2FF"/>
+    <rect x="122" y="78" width="56" height="104" rx="13" fill="#FFFFFF"/>
+    <rect x="122" y="108" width="56" height="34" fill="#2447F9"/>
+    <text x="150" y="130" text-anchor="middle" class="t-rubik" font-size="10.5" font-weight="900" fill="#FFE14A">TUMBLE</text>
+  </g>
+  <circle cx="50" cy="96" r="10" fill="#FFFFFF"/>
+  <circle cx="72" cy="64" r="6" fill="#FFFFFF" opacity="0.85"/>
+  <circle cx="38" cy="150" r="5" fill="#FFE14A"/>
+  <circle cx="216" cy="214" r="8" fill="#FFFFFF"/>
+  <circle cx="198" cy="238" r="4.5" fill="#FFFFFF" opacity="0.85"/>
+  <text x="17" y="266" class="t-rubik" font-size="45" font-weight="900" fill="#FFFFFF">Tumble</text>
+  <text x="20" y="293" class="t-rubik" font-size="21" font-weight="700" fill="#FFE14A">into summer.</text>
+  <path d="M0 324q20-14 40 0t40 0 40 0 40 0 40 0 40 0V340H0z" fill="#FFFFFF"/>
+</svg>

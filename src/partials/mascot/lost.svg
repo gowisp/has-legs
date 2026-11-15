@@ -1,0 +1,9 @@
+<svg class="walker" viewBox="0 0 220 220" aria-hidden="true">
+  <line class="ground" x1="14" y1="206" x2="206" y2="206"/>
+  <path class="leg la" d="M86 150V202h12"/>
+  <path class="leg lb" d="M132 150V202h12"/>
+  <g class="body">
+    <rect class="b-card dashed" x="56" y="22" width="108" height="130" rx="9"/>
+    <text class="q" x="110" y="116" text-anchor="middle">?</text>
+  </g>
+</svg>

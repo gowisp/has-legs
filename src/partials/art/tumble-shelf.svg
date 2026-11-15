@@ -1,0 +1,13 @@
+<svg class="art-round" viewBox="0 0 420 78" role="img" aria-label="A shelf strip in the same blue, with the can, the yellow circle, the line Tumble into summer and a price flash.">
+  <rect width="420" height="78" fill="#2447F9"/>
+  <circle cx="40" cy="35" r="24" fill="#FFE14A"/>
+  <g transform="rotate(22 40 35)">
+    <rect x="31" y="17" width="18" height="36" rx="5" fill="#FFFFFF"/>
+    <rect x="31" y="28" width="18" height="12" fill="#2447F9"/>
+  </g>
+  <text x="78" y="44" class="t-rubik" font-size="23" font-weight="900" fill="#FFFFFF">Tumble into summer.</text>
+  <circle cx="378" cy="35" r="27" fill="#FFE14A"/>
+  <text x="378" y="31" text-anchor="middle" class="t-rubik" font-size="10" font-weight="700" fill="#2447F9">2 for</text>
+  <text x="378" y="48" text-anchor="middle" class="t-rubik" font-size="16" font-weight="900" fill="#2447F9">R30</text>
+  <path d="M0 71q15-9 30 0t30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0V78H0z" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,228 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Has Legs: browser checks</title>
+<!--
+  Run with:  python check.py
+  That script builds the site into a temporary folder, serves it, opens this page
+  in headless Chrome and prints each line below as PASS or FAIL.
+  The address and prices are passed in from site.json, so the checks follow them.
+  The fade-in on scroll is not checked here: headless Chrome draws no frames in
+  this mode, so that one is checked by screenshot instead.
+-->
+<iframe id="f" style="width:1280px;height:900px;border:0"></iframe>
+<pre id="out">RUNNING</pre>
+<script>
+const Q = new URLSearchParams(location.search);
+const BASE = Q.get('base') || '/has-legs/';
+const EMAIL = Q.get('email') || '';
+const SINGLE = Number(Q.get('single')), FURTHER = Number(Q.get('further')), SETMAX = Number(Q.get('setmax')), CUR = Q.get('cur') || 'R';
+const money = (n) => CUR + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const setFee = (n) => money(SINGLE + FURTHER * (n - 1));
+const KEY = 'haslegs.brief.v1';
+
+const f = document.getElementById('f');
+const results = [];
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+function check(name, ok, detail) { results.push((ok ? 'PASS' : 'FAIL') + '  ' + name + (ok ? '' : '  -> ' + detail)); }
+function load(path, width) {
+  return new Promise((resolve) => {
+    f.style.width = (width || 1280) + 'px';
+    f.onload = () => setTimeout(() => resolve(f.contentWindow), 150);
+    f.src = BASE + path;
+  });
+}
+function type(doc, sel, value) {
+  const el = typeof sel === 'string' ? doc.querySelector(sel) : sel;
+  el.value = value;
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+}
+function pick(doc, name, value) {
+  const el = doc.querySelector(`input[name="${name}"][value="${value}"]`);
+  el.checked = true;
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+}
+function tick(el, on) { el.checked = on; el.dispatchEvent(new Event('change', { bubbles: true })); }
+const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').trim();
+
+(async () => {
+  try {
+    // ---------- The brief builder ----------
+    let w = await load('brief/');
+    w.localStorage.removeItem(KEY);
+    w = await load('brief/');
+    let d = w.document;
+    let mail = null, download = null;
+    const hook = (doc) => doc.addEventListener('click', (e) => {
+      const a = e.target.closest && e.target.closest('a');
+      if (a && a.href.startsWith('mailto:') && a.style.display === 'none') { mail = a.href; e.preventDefault(); }
+      if (a && a.hasAttribute('download')) { download = a.download + '|' + a.href.slice(0, 5); e.preventDefault(); }
+    }, true);
+    hook(d);
+    const rowsOf = () => d.querySelectorAll('#pieces .piece');
+
+    check('brief: starts with one piece row', rowsOf().length === 1, rowsOf().length);
+    check('brief: starts as a Single', text(d, '#sum-size') === 'Single', text(d, '#sum-size'));
+    check('brief: all four things start as still to come', d.querySelectorAll('.clock-list li.in').length === 0 && text(d, '#clock-verdict').includes('Still to come'), text(d, '#clock-verdict'));
+    check('brief: agency question is hidden for brand teams', d.getElementById('agency-mode').hidden === true, '');
+
+    d.getElementById('send-brief').click();
+    await sleep(50);
+    check('brief: an empty form is not sent', mail === null, mail);
+    check('brief: an empty form says what is missing', d.getElementById('brief-status').classList.contains('bad') && text(d, '#brief-status').includes('your name') && text(d, '#brief-status').includes('at least one piece'), text(d, '#brief-status'));
+    check('brief: the missing fields are marked', d.querySelector('#b-name').getAttribute('aria-invalid') === 'true', '');
+
+    type(d, '#b-name', 'Thandi Mokoena');
+    type(d, '#b-company', 'Verlane Bank');
+    type(d, '#b-reference', 'Our presentation template: navy, a serif headline, thin line drawings');
+    type(d, '#b-link', 'https://example.com/deck');
+    pick(d, 'guidelines', 'yes');
+    type(d, rowsOf()[0].querySelector('[name=piece_name]'), 'Hole sign');
+    type(d, rowsOf()[0].querySelector('[name=piece_spec]'), 'A1 portrait, printed, on the course');
+    type(d, rowsOf()[0].querySelector('[name=piece_qty]'), '18');
+    d.getElementById('add-piece').click();
+    d.getElementById('add-piece').click();
+    type(d, rowsOf()[1].querySelector('[name=piece_name]'), 'Course map');
+    type(d, rowsOf()[2].querySelector('[name=piece_name]'), 'Scorecard');
+    pick(d, 'copy', 'yes');
+    pick(d, 'specs', 'no');
+    type(d, '#b-due', '2026-11-27');
+    await sleep(50);
+
+    check('brief: three pieces read as a Set', text(d, '#sum-size') === 'Set' && text(d, '#sum-count') === '3 pieces', text(d, '#sum-size') + ' / ' + text(d, '#sum-count'));
+    check('brief: a Set of three shows its fee, from ' + setFee(3), text(d, '#sum-note').includes('from ' + setFee(3) + '.'), text(d, '#sum-note'));
+    check('brief: three of the four things are ticked', d.querySelectorAll('.clock-list li.in').length === 3, d.querySelectorAll('.clock-list li.in').length);
+    check('brief: only specifications are named as still to come', text(d, '#clock-verdict').includes('Still to come: specifications.'), text(d, '#clock-verdict'));
+    check('brief: the warning clears once you type', !d.getElementById('brief-status').classList.contains('bad'), text(d, '#brief-status'));
+    const preview = text(d, '#brief-preview');
+    check('brief: the preview lists each piece with its quantity', preview.includes('1. Hole sign: A1 portrait, printed, on the course (x18)') && preview.includes('3. Scorecard'), preview);
+    check('brief: the preview carries size, guidelines, copy and date', preview.includes('3. WHAT WE NEED NEXT (Set, 3 pieces)') && preview.includes('In hand. Attached or linked with this email.') && preview.includes('Final copy: Final and signed off.') && preview.includes('Specifications: Still to come.') && preview.includes('Friday 27 November 2026'), preview);
+    check('brief: the preview has no long dashes', !/[–—]/.test(preview), '');
+
+    d.getElementById('send-brief').click();
+    await sleep(50);
+    check('brief: a complete brief opens an email to ' + EMAIL, Boolean(mail) && mail.startsWith('mailto:' + EMAIL + '?subject='), mail);
+    const body = mail ? decodeURIComponent(mail.split('&body=')[1] || '') : '';
+    check('brief: the email says the same as the preview', body.replace(/\r\n/g, '\n').includes('1. THE REFERENCE\nOur presentation template') && body.includes('Thandi Mokoena, Verlane Bank'), body.slice(0, 300));
+    check('brief: the subject names the company and the size', Boolean(mail) && decodeURIComponent(mail).includes('subject=Brief for Has Legs: Verlane Bank (Set)'), mail && decodeURIComponent(mail).slice(0, 120));
+    check('brief: the email keeps its line breaks', Boolean(mail) && mail.includes('%0D%0A') && !mail.replace(/%0D%0A/g, '').includes('%0A'), '');
+    check('brief: the email link is short enough for mail programmes', Boolean(mail) && mail.length < 1800, mail && mail.length);
+    check('brief: the sender is told to attach the files', text(d, '#brief-status').includes('Attach your reference'), text(d, '#brief-status'));
+
+    d.getElementById('download-brief').click();
+    await sleep(50);
+    check('brief: download gives a text file', download === 'has-legs-brief.txt|blob:', download);
+
+    const whole = d.querySelector('input[name=whole]');
+    tick(whole, true);
+    await sleep(30);
+    check('brief: everything for one event reads as a Kit, quoted', text(d, '#sum-size') === 'Kit' && text(d, '#sum-note').includes('Quoted within one working day'), text(d, '#sum-size') + ' / ' + text(d, '#sum-note'));
+    tick(whole, false);
+    while (rowsOf().length < SETMAX + 1) { d.getElementById('add-piece').click(); }
+    rowsOf().forEach((row, i) => { if (i >= 3) type(d, row.querySelector('[name=piece_name]'), 'Piece ' + (i + 1)); });
+    await sleep(30);
+    check('brief: more than ' + SETMAX + ' pieces read as a Kit', text(d, '#sum-size') === 'Kit' && text(d, '#sum-count') === (SETMAX + 1) + ' pieces', text(d, '#sum-size') + ' / ' + text(d, '#sum-count'));
+    rowsOf()[SETMAX].querySelector('.piece-remove').click();
+    await sleep(30);
+    check('brief: removing one drops back to a full Set, from ' + setFee(SETMAX), text(d, '#sum-size') === 'Set' && text(d, '#sum-note').includes('from ' + setFee(SETMAX) + '.'), text(d, '#sum-size') + ' / ' + text(d, '#sum-note'));
+
+    pick(d, 'guidelines', 'no');
+    await sleep(30);
+    check('brief: no brand guidelines shows the back-to-your-agency note', d.getElementById('guidelines-note').hidden === false && text(d, '#clock-verdict').includes('Still to come: brand guidelines and specifications.'), text(d, '#clock-verdict'));
+
+    pick(d, 'role', 'agency');
+    await sleep(30);
+    check('brief: an agency is asked referral or white-label', d.getElementById('agency-mode').hidden === false, '');
+    pick(d, 'mode', 'whitelabel');
+    await sleep(30);
+    check('brief: the white-label choice reaches the email', text(d, '#brief-preview').includes('white-labelled: we deliver it under our own name'), '');
+
+    const saved = JSON.parse(w.localStorage.getItem(KEY) || 'null');
+    check('brief: the draft is saved on this device', Boolean(saved) && saved.name === 'Thandi Mokoena' && saved.pieces.length === SETMAX, JSON.stringify(saved).slice(0, 200));
+    w = await load('brief/');
+    d = w.document; hook(d);
+    check('brief: the draft survives a reload', d.querySelector('#b-name').value === 'Thandi Mokoena' && rowsOf().length === SETMAX && text(d, '#sum-size') === 'Set' && d.querySelector('input[name=role][value=agency]').checked, d.querySelector('#b-name').value + ' / ' + rowsOf().length);
+
+    mail = null;
+    type(d, '#b-notes', 'Long note. '.repeat(260));
+    d.getElementById('send-brief').click();
+    await sleep(80);
+    check('brief: an over-long brief falls back to paste', Boolean(mail) && mail.length < 1800 && decodeURIComponent(mail).includes('Paste the brief here'), mail && mail.length);
+
+    d.getElementById('reset-brief').click();
+    await sleep(30);
+    check('brief: clearing empties the form and the saved draft', d.querySelector('#b-name').value === '' && rowsOf().length === 1 && w.localStorage.getItem(KEY) === null, w.localStorage.getItem(KEY));
+
+    w = await load('brief/?pieces=4&kit=1&from=agency');
+    d = w.document;
+    check('brief: a link from the sizer arrives with its rows ready', rowsOf().length === 4 && d.querySelector('input[name=whole]').checked && d.querySelector('input[name=role][value=agency]').checked && d.getElementById('agency-mode').hidden === false, rowsOf().length);
+    w.localStorage.removeItem(KEY);
+
+    // ---------- Size your job ----------
+    w = await load('pricing/');
+    d = w.document;
+    const S = (sel) => text(d, '[data-sizer] ' + sel);
+    check('sizer: starts at three pieces, a Set from ' + setFee(3), S('[data-count]') === '3' && S('[data-size]') === 'A Set.' && S('[data-fee]') === 'Fixed fee from ' + setFee(3), S('[data-count]') + ' / ' + S('[data-size]') + ' / ' + S('[data-fee]'));
+    check('sizer: draws three walking pieces', d.querySelectorAll('[data-parade] svg').length === 3, d.querySelectorAll('[data-parade] svg').length);
+    const plus = d.querySelector('[data-step="1"]'), minus = d.querySelector('[data-step="-1"]');
+    for (let n = 3; n < SETMAX; n++) plus.click();
+    check('sizer: ' + SETMAX + ' pieces are still a Set, from ' + setFee(SETMAX), S('[data-size]') === 'A Set.' && S('[data-fee]') === 'Fixed fee from ' + setFee(SETMAX), S('[data-size]') + ' / ' + S('[data-fee]'));
+    plus.click();
+    check('sizer: one more is a Kit, quoted', S('[data-size]') === 'A Kit.' && S('[data-fee]').includes('Quoted per kit'), S('[data-size]') + ' / ' + S('[data-fee]'));
+    for (let n = 0; n < SETMAX; n++) minus.click();
+    check('sizer: one piece is a Single from ' + money(SINGLE), S('[data-count]') === '1' && S('[data-size]') === 'A Single.' && S('[data-fee]') === 'Fixed fee from ' + money(SINGLE) && minus.disabled, S('[data-count]') + ' / ' + S('[data-size]') + ' / ' + S('[data-fee]'));
+    tick(d.querySelector('[data-whole]'), true);
+    check('sizer: everything for one event makes it a Kit', S('[data-size]') === 'A Kit.', S('[data-size]'));
+    check('sizer: the start button carries the count to the brief', d.querySelector('[data-start]').getAttribute('href') === '../brief/?pieces=1&kit=1', d.querySelector('[data-start]').getAttribute('href'));
+    const cards = text(d, '.sizes');
+    check('pricing: the size cards show the prices from site.json', cards.includes(money(SINGLE)) && cards.includes(setFee(2)) && cards.includes(setFee(SETMAX)), cards.slice(0, 200));
+
+    // ---------- FAQ ----------
+    w = await load('faq/');
+    d = w.document;
+    check('faq: every question is on the page', d.querySelectorAll('.faq details').length >= 20, d.querySelectorAll('.faq details').length);
+    d.querySelector('[data-filter="prices"]').click();
+    check('faq: a topic button shows just that topic', [...d.querySelectorAll('.faq-group')].filter((g) => !g.hidden).length === 1 && !d.getElementById('prices').hidden, '');
+    w.location.hash = '#q-own-ai';
+    await sleep(120);
+    check('faq: a link to one question opens it', d.getElementById('q-own-ai').open === true && d.getElementById('ai').hidden === false, d.getElementById('q-own-ai').open);
+
+    // ---------- Home ----------
+    w = await load('');
+    d = w.document;
+    await sleep(300);
+    check('home: the first FAQ answer is open', d.querySelector('[data-open-first] details').open === true, '');
+    check('home: the main script ran', w.hasLegsReady === true && !d.documentElement.classList.contains('no-reveal'), d.documentElement.className);
+    check('home: no cookies are set', d.cookie === '', d.cookie);
+    const loaded = w.performance.getEntriesByType('resource').map((r) => r.name);
+    check('home: nothing loads from another website', loaded.length > 3 && loaded.every((u) => u.startsWith(location.origin)), loaded.filter((u) => !u.startsWith(location.origin)).join(' '));
+    check('home: the briefs address is the one in site.json', text(d, '.call .addr') === EMAIL, text(d, '.call .addr'));
+
+    // ---------- Menu on a phone ----------
+    w = await load('how-it-works/', 390);
+    d = w.document;
+    const btn = d.querySelector('.menu-btn'), nav = d.getElementById('site-nav');
+    check('menu: on a phone the links tuck behind a Menu button', w.getComputedStyle(btn).display !== 'none' && w.getComputedStyle(nav).visibility === 'hidden', w.getComputedStyle(btn).display + ' / ' + w.getComputedStyle(nav).visibility);
+    btn.click();
+    await sleep(350);
+    check('menu: it opens', nav.classList.contains('open') && btn.getAttribute('aria-expanded') === 'true' && w.getComputedStyle(nav).visibility === 'visible' && d.documentElement.classList.contains('menu-open') && text(d, '.menu-word') === 'Close', '');
+    check('menu: the page you are on is marked', text(d, '#site-nav a[aria-current="page"]') === 'How it works', '');
+    d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await sleep(350);
+    check('menu: Escape closes it', !nav.classList.contains('open') && btn.getAttribute('aria-expanded') === 'false' && !d.documentElement.classList.contains('menu-open'), '');
+
+    // ---------- No sideways scrolling on a phone ----------
+    for (const p of ['', 'work/', 'work/golf-day/', 'work/in-store-set/', 'work/staff-conference/', 'how-it-works/', 'pricing/', 'agencies/', 'studio/', 'faq/', 'brief/', 'privacy/', '404.html']) {
+      w = await load(p, 390);
+      check('phone (390 wide): no sideways scroll on /' + p, w.document.documentElement.scrollWidth <= 390, w.document.documentElement.scrollWidth);
+    }
+    for (const p of ['', 'work/golf-day/', 'pricing/', 'agencies/', 'brief/']) {
+      w = await load(p, 320);
+      check('small phone (320 wide): no sideways scroll on /' + p, w.document.documentElement.scrollWidth <= 320, w.document.documentElement.scrollWidth);
+    }
+  } catch (err) {
+    results.push('ERROR  ' + ((err && err.stack) || err));
+  }
+  const fails = results.filter((r) => !r.startsWith('PASS')).length;
+  document.getElementById('out').textContent = 'DONE ' + (results.length - fails) + '/' + results.length + '\n' + results.join('\n');
+})();
+</script>

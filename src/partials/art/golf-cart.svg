@@ -1,0 +1,26 @@
+<svg viewBox="0 0 400 262" role="img" aria-label="A cart card laid out like the deck's content slide. Cart 12, tee-off at 08:10 from hole 7, with the four players listed and the hill line along the bottom.">
+  <rect x="6" y="6" width="388" height="250" rx="8" fill="#FFFFFF" stroke="#DDE2EA" stroke-width="1.5"/>
+  <text x="28" y="56" class="v-serif" font-size="34" fill="#12284C">Cart 12</text>
+  <line x1="30" y1="72" x2="86" y2="72" stroke="#F2B33D" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="290" cy="42" r="4" fill="#F2B33D"/>
+  <text x="300" y="47" class="v-serif" font-size="13" fill="#12284C">Verlane Bank</text>
+
+  <text x="30" y="108" class="v-sans" font-size="10" font-weight="700" letter-spacing="1.6" fill="#5C6884">YOUR FOUR-BALL</text>
+  <g class="v-sans" font-size="15" fill="#12284C">
+    <text x="30" y="134">T. Mokoena</text>
+    <text x="30" y="158">A. Pillay</text>
+    <text x="30" y="182">J. van Wyk</text>
+    <text x="30" y="206">S. Dlamini</text>
+  </g>
+
+  <line x1="196" y1="96" x2="196" y2="210" stroke="#DDE2EA" stroke-width="1.5"/>
+
+  <text x="222" y="108" class="v-sans" font-size="10" font-weight="700" letter-spacing="1.6" fill="#5C6884">TEE-OFF</text>
+  <text x="220" y="160" class="v-serif" font-size="52" fill="#12284C">08:10</text>
+  <circle cx="228" cy="190" r="7" fill="#F2B33D"/>
+  <text x="244" y="195" class="v-sans" font-size="14" font-weight="700" fill="#12284C">Start at hole 7</text>
+
+  <path d="M6 236c44 0 62-16 98-10s58 18 100 6 64-16 104-8 62 8 86 4" fill="none" stroke="#12284C" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M352 226v-14" fill="none" stroke="#12284C" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="352" cy="205" r="7" fill="none" stroke="#12284C" stroke-width="1.8"/>
+</svg>

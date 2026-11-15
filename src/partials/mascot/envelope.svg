@@ -1,0 +1,10 @@
+<svg class="walker" viewBox="0 0 220 220" aria-hidden="true">
+  <line class="ground" x1="14" y1="206" x2="206" y2="206"/>
+  <path class="leg la" d="M86 150V202h12"/>
+  <path class="leg lb" d="M134 150V202h12"/>
+  <g class="body">
+    <rect class="b-card" x="32" y="54" width="156" height="98" rx="11"/>
+    <path class="b-wave" d="M36 62l74 52 74-52"/>
+    <circle class="b-hot" cx="110" cy="116" r="13"/>
+  </g>
+</svg>

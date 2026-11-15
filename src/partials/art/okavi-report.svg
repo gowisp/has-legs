@@ -1,0 +1,13 @@
+<svg class="art-round" viewBox="0 0 240 340" role="img" aria-label="A report cover for Okavi Energy: concentric rising arcs in green and terracotta on sand, with the title Integrated Report 2026.">
+  <rect width="240" height="340" fill="#F3E9D8"/>
+  <text x="20" y="48" class="o-syne" font-size="19" font-weight="800" fill="#1C2B27">Integrated</text>
+  <text x="20" y="71" class="o-syne" font-size="19" font-weight="800" fill="#1C2B27">Report 2026</text>
+  <path d="M6 250A114 114 0 0 1 234 250z" fill="#1F5D4C"/>
+  <path d="M34 250A86 86 0 0 1 206 250z" fill="#D9653B"/>
+  <path d="M62 250A58 58 0 0 1 178 250z" fill="#F3E9D8"/>
+  <path d="M90 250A30 30 0 0 1 150 250z" fill="#1F5D4C"/>
+  <rect x="6" y="258" width="228" height="5" fill="#D9653B"/>
+  <rect x="34" y="270" width="172" height="5" fill="#1F5D4C"/>
+  <rect x="62" y="282" width="116" height="5" fill="#D9653B"/>
+  <text x="20" y="322" class="o-syne" font-size="10.5" font-weight="600" letter-spacing="1.2" fill="#1C2B27">OKAVI ENERGY</text>
+</svg>

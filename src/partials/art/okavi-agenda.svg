@@ -1,0 +1,16 @@
+<svg class="art-round" viewBox="0 0 160 210" role="img" aria-label="An agenda card with quarter arcs in the corner and the day's sessions listed.">
+  <rect width="160" height="210" fill="#F3E9D8"/>
+  <path d="M88 0A72 72 0 0 0 160 72V0z" fill="#1F5D4C"/>
+  <path d="M108 0A52 52 0 0 0 160 52V0z" fill="#D9653B"/>
+  <path d="M128 0A32 32 0 0 0 160 32V0z" fill="#F3E9D8"/>
+  <path d="M146 0A14 14 0 0 0 160 14V0z" fill="#1F5D4C"/>
+  <text x="16" y="86" class="o-syne" font-size="16" font-weight="800" fill="#1C2B27">Agenda</text>
+  <g class="v-sans" font-size="8.5" fill="#1C2B27">
+    <text x="16" y="110" font-weight="700" fill="#1F5D4C">09:00</text><text x="50" y="110">Welcome</text>
+    <text x="16" y="128" font-weight="700" fill="#1F5D4C">09:30</text><text x="50" y="128">The next ten years</text>
+    <text x="16" y="146" font-weight="700" fill="#1F5D4C">11:00</text><text x="50" y="146">Breakaways</text>
+    <text x="16" y="164" font-weight="700" fill="#1F5D4C">13:00</text><text x="50" y="164">Lunch</text>
+  </g>
+  <rect x="16" y="182" width="128" height="3" fill="#D9653B"/>
+  <rect x="16" y="190" width="88" height="3" fill="#1F5D4C"/>
+</svg>

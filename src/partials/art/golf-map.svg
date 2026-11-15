@@ -1,0 +1,95 @@
+<svg viewBox="0 0 520 380" role="img" aria-label="A course map for the golf day. Nine fairways drawn in the deck's thin navy line, each pin marked with a yellow dot, with hole numbers in the deck's serif.">
+  <rect x="1" y="1" width="518" height="378" rx="8" fill="#FBF8F1" stroke="#E2D9C6" stroke-width="1.5"/>
+  <circle cx="30" cy="33" r="4.5" fill="#F2B33D"/>
+  <text x="42" y="38" class="v-serif" font-size="14" fill="#12284C">Verlane Bank</text>
+  <text x="25" y="78" class="v-serif" font-size="31" fill="#12284C">Course map</text>
+  <line x1="27" y1="91" x2="83" y2="91" stroke="#F2B33D" stroke-width="3" stroke-linecap="round"/>
+  <text x="27" y="110" class="v-sans" font-size="10.5" fill="#5C6884">Client Golf Day, front nine</text>
+
+  <!-- the hills and sun from the title slide -->
+  <circle cx="462" cy="34" r="9" fill="#F2B33D"/>
+  <path d="M350 62c26 0 40-18 62-13s32 20 54 9 30-12 40-9" fill="none" stroke="#12284C" stroke-width="1.8" stroke-linecap="round"/>
+
+  <g transform="translate(0 14)">
+    <!-- fairways -->
+    <g fill="none" stroke="#DCE4F0" stroke-width="17" stroke-linecap="round">
+      <path d="M92 300Q84 244 120 202"/>
+      <path d="M140 182Q176 132 232 124"/>
+      <path d="M256 114Q302 92 350 108"/>
+      <path d="M374 118Q432 114 462 154"/>
+      <path d="M466 180Q478 228 440 264"/>
+      <path d="M420 284Q380 326 318 314"/>
+      <path d="M298 298Q290 250 332 216"/>
+      <path d="M318 194Q262 168 210 204"/>
+      <path d="M198 224Q190 276 138 300"/>
+    </g>
+    <!-- playing lines -->
+    <g fill="none" stroke="#12284C" stroke-width="1.8" stroke-linecap="round">
+      <path d="M92 300Q84 244 120 202"/>
+      <path d="M140 182Q176 132 232 124"/>
+      <path d="M256 114Q302 92 350 108"/>
+      <path d="M374 118Q432 114 462 154"/>
+      <path d="M466 180Q478 228 440 264"/>
+      <path d="M420 284Q380 326 318 314"/>
+      <path d="M298 298Q290 250 332 216"/>
+      <path d="M318 194Q262 168 210 204"/>
+      <path d="M198 224Q190 276 138 300"/>
+    </g>
+    <!-- greens and pins -->
+    <g fill="#FBF8F1" stroke="#12284C" stroke-width="1.8">
+      <circle cx="120" cy="202" r="9"/><circle cx="232" cy="124" r="9"/><circle cx="350" cy="108" r="9"/>
+      <circle cx="462" cy="154" r="9"/><circle cx="440" cy="264" r="9"/><circle cx="318" cy="314" r="9"/>
+      <circle cx="332" cy="216" r="9"/><circle cx="210" cy="204" r="9"/><circle cx="138" cy="300" r="9"/>
+    </g>
+    <g fill="#F2B33D">
+      <circle cx="120" cy="202" r="3.6"/><circle cx="232" cy="124" r="3.6"/><circle cx="350" cy="108" r="3.6"/>
+      <circle cx="462" cy="154" r="3.6"/><circle cx="440" cy="264" r="3.6"/><circle cx="318" cy="314" r="3.6"/>
+      <circle cx="332" cy="216" r="3.6"/><circle cx="210" cy="204" r="3.6"/><circle cx="138" cy="300" r="3.6"/>
+    </g>
+    <!-- tees -->
+    <g fill="#12284C">
+      <rect x="89" y="297" width="6" height="6"/><rect x="137" y="179" width="6" height="6"/><rect x="253" y="111" width="6" height="6"/>
+      <rect x="371" y="115" width="6" height="6"/><rect x="463" y="177" width="6" height="6"/><rect x="417" y="281" width="6" height="6"/>
+      <rect x="295" y="295" width="6" height="6"/><rect x="315" y="191" width="6" height="6"/><rect x="195" y="221" width="6" height="6"/>
+    </g>
+    <!-- hole numbers -->
+    <g class="v-serif" font-size="17" fill="#12284C" text-anchor="middle">
+      <text x="72" y="290">1</text>
+      <text x="150" y="212">2</text>
+      <text x="262" y="144">3</text>
+      <text x="384" y="148">4</text>
+      <text x="490" y="192">5</text>
+      <text x="436" y="310">6</text>
+      <text x="278" y="296">7</text>
+      <text x="334" y="184">8</text>
+      <text x="216" y="240">9</text>
+    </g>
+    <!-- water -->
+    <g fill="none" stroke="#12284C" stroke-width="1.5" stroke-linecap="round">
+      <path d="M372 196q6-6 12 0t12 0 12 0 12 0"/>
+      <path d="M380 208q6-6 12 0t12 0 12 0"/>
+      <path d="M372 220q6-6 12 0t12 0 12 0 12 0"/>
+    </g>
+    <!-- trees -->
+    <g fill="none" stroke="#12284C" stroke-width="1.6" stroke-linecap="round">
+      <path d="M52 232v-9"/><circle cx="52" cy="216" r="7"/>
+      <path d="M68 208v-9"/><circle cx="68" cy="192" r="7"/>
+      <path d="M288 158v-9"/><circle cx="288" cy="142" r="7"/>
+      <path d="M240 318v-9"/><circle cx="240" cy="302" r="7"/>
+      <path d="M258 334v-9"/><circle cx="258" cy="318" r="7"/>
+      <path d="M488 318v-9"/><circle cx="488" cy="302" r="7"/>
+      <path d="M180 286v-9"/><circle cx="180" cy="270" r="7"/>
+    </g>
+    <!-- clubhouse, the house from the content slide -->
+    <g fill="none" stroke="#12284C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M26 334v-17l17-13 17 13v17zM39 334v-9h8v9"/>
+    </g>
+    <text x="26" y="349" class="v-sans" font-size="9" font-weight="700" fill="#12284C">Clubhouse</text>
+  </g>
+
+  <!-- key -->
+  <circle cx="408" cy="361" r="3.6" fill="#F2B33D"/>
+  <text x="416" y="364.5" class="v-sans" font-size="9" fill="#5C6884">Pin</text>
+  <rect x="444" y="358" width="6" height="6" fill="#12284C"/>
+  <text x="455" y="364.5" class="v-sans" font-size="9" fill="#5C6884">Tee</text>
+</svg>

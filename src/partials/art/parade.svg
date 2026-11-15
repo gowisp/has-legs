@@ -1,0 +1,77 @@
+<svg class="parade walker" viewBox="0 0 1200 290" role="img" aria-label="A presentation slide on two legs. Ahead of it walk a poster, a sign, a scorecard, a banner and a badge, all in step and all carrying the same circle and wave.">
+  <line class="ground" x1="10" y1="266" x2="1190" y2="266"/>
+
+  <!-- the reference -->
+  <g>
+    <path class="leg la" d="M112 196V260h14"/>
+    <path class="leg lb" d="M188 196V260h14"/>
+    <g class="body">
+      <rect class="b-card" x="40" y="62" width="220" height="136" rx="10"/>
+      <circle class="b-hot" cx="98" cy="116" r="24"/>
+      <rect class="b-ink" x="142" y="99" width="92" height="9" rx="4.5"/>
+      <rect class="b-mute" x="142" y="119" width="60" height="9" rx="4.5"/>
+      <path class="b-wave" d="M62 168q14-18 28 0t28 0 28 0 28 0 28 0 28 0"/>
+      <text class="tag" x="42" y="34">the reference</text>
+      <path class="tag-line" d="M170 30q26 2 30 24"/>
+    </g>
+  </g>
+
+  <!-- poster -->
+  <g>
+    <path class="leg la" d="M368 196V260h13"/>
+    <path class="leg lb" d="M412 196V260h13"/>
+    <g class="body">
+      <rect class="b-card" x="338" y="50" width="108" height="148" rx="8"/>
+      <circle class="b-hot" cx="392" cy="100" r="31"/>
+      <path class="b-wave" d="M356 152q9-12 18 0t18 0 18 0 18 0"/>
+      <rect class="b-ink" x="356" y="170" width="58" height="8" rx="4"/>
+    </g>
+  </g>
+
+  <!-- sign -->
+  <g>
+    <path class="leg la" d="M566 168V260h14"/>
+    <path class="leg lb" d="M644 168V260h14"/>
+    <g class="body">
+      <rect class="b-dark" x="520" y="82" width="172" height="90" rx="12"/>
+      <path class="b-wave-l" d="M562 127h84M624 105l24 22-24 22"/>
+      <circle class="b-hot" cx="556" cy="127" r="11"/>
+    </g>
+  </g>
+
+  <!-- scorecard -->
+  <g>
+    <path class="leg la" d="M800 196V260h12"/>
+    <path class="leg lb" d="M850 196V260h12"/>
+    <g class="body">
+      <rect class="b-card" x="768" y="126" width="116" height="72" rx="7"/>
+      <path class="b-grid" d="M768 150h116M768 174h116M806 150v48M845 150v48"/>
+      <path class="b-wave" d="M780 141q6-8 12 0t12 0 12 0" stroke-width="2.5"/>
+      <circle class="b-hot" cx="864" cy="186" r="7.5"/>
+    </g>
+  </g>
+
+  <!-- banner -->
+  <g>
+    <path class="leg la" d="M972 196V260h12"/>
+    <path class="leg lb" d="M1000 196V260h12"/>
+    <g class="body">
+      <rect class="b-card" x="950" y="26" width="72" height="172" rx="8"/>
+      <circle class="b-hot" cx="986" cy="66" r="20"/>
+      <path class="b-wave" d="M964 112q7.5-10 15 0t15 0 15 0"/>
+      <rect class="b-ink" x="964" y="136" width="44" height="8" rx="4"/>
+      <rect class="b-mute" x="964" y="154" width="28" height="8" rx="4"/>
+    </g>
+  </g>
+
+  <!-- badge -->
+  <g>
+    <path class="leg la" d="M1096 194V260h12"/>
+    <path class="leg lb" d="M1128 194V260h12"/>
+    <g class="body">
+      <circle class="b-hot-o" cx="1114" cy="150" r="48"/>
+      <path class="b-wave" d="M1082 158q8-11 16 0t16 0 16 0 16 0"/>
+      <circle class="b-card" cx="1114" cy="126" r="9"/>
+    </g>
+  </g>
+</svg>

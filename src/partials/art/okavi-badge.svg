@@ -1,0 +1,12 @@
+<svg viewBox="0 0 140 200" role="img" aria-label="A name badge on a lanyard with the rising arcs above the delegate's name.">
+  <path d="M52 0 68 32M88 0 72 32" fill="none" stroke="#D9653B" stroke-width="6"/>
+  <rect x="60" y="28" width="20" height="12" rx="2" fill="#1C2B27"/>
+  <rect x="14" y="38" width="112" height="156" rx="8" fill="#F3E9D8" stroke="#DFD0B4" stroke-width="1.5"/>
+  <path d="M24 114A46 46 0 0 1 116 114z" fill="#1F5D4C"/>
+  <path d="M37 114A33 33 0 0 1 103 114z" fill="#D9653B"/>
+  <path d="M50 114A20 20 0 0 1 90 114z" fill="#F3E9D8"/>
+  <rect x="24" y="119" width="92" height="3" fill="#D9653B"/>
+  <text x="70" y="148" text-anchor="middle" class="o-syne" font-size="11.5" font-weight="800" fill="#1C2B27">Thandi M.</text>
+  <text x="70" y="163" text-anchor="middle" class="o-syne" font-size="8.5" font-weight="600" fill="#1F5D4C">Operations</text>
+  <text x="70" y="182" text-anchor="middle" class="o-syne" font-size="6.5" font-weight="600" letter-spacing="1" fill="#1C2B27">OKAVI ENERGY</text>
+</svg>

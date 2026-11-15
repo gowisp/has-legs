@@ -1,0 +1,20 @@
+{
+  "name": "Has Legs",
+  "tagline": "Creative extension studio",
+  "country": "South Africa",
+
+  "url": "https://gowisp.github.io/has-legs/",
+  "base_path": "/has-legs/",
+  "hide_from_search": true,
+
+  "email": "briefs@haslegs.example",
+
+  "prices": {
+    "currency": "R",
+    "single_from": 2400,
+    "each_further_piece_from": 1800,
+    "set_max_pieces": 5
+  },
+
+  "year": 2026
+}
