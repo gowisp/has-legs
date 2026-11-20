@@ -5,7 +5,7 @@
   Run with:  python check.py
   That script builds the site into a temporary folder, serves it, opens this page
   in headless Chrome and prints each line below as PASS or FAIL.
-  The address and prices are passed in from site.json, so the checks follow them.
+  The briefs address is passed in from site.json, so the checks follow it.
   The fade-in on scroll is not checked here: headless Chrome draws no frames in
   this mode, so that one is checked by screenshot instead.
 -->
@@ -15,10 +15,10 @@
 const Q = new URLSearchParams(location.search);
 const BASE = Q.get('base') || '/has-legs/';
 const EMAIL = Q.get('email') || '';
-const SINGLE = Number(Q.get('single')), FURTHER = Number(Q.get('further')), SETMAX = Number(Q.get('setmax')), CUR = Q.get('cur') || 'R';
-const money = (n) => CUR + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-const setFee = (n) => money(SINGLE + FURTHER * (n - 1));
-const KEY = 'haslegs.brief.v1';
+const KEY = 'haslegs.brief.v2';
+const ITEMS = ['Flyer', 'Banner advert', 'PowerPoint', 'Letterhead', 'Business card', 'Wayfinding signage', 'Email signature'];
+const PAGES = ['', 'work/', 'how-it-works/', 'catalogue/', 'studio/', 'agencies/', 'brief/', 'privacy/', '404.html'];
+const RETIRED = ['pricing/', 'faq/', 'work/golf-day/', 'work/in-store-set/', 'work/staff-conference/'];
 
 const f = document.getElementById('f');
 const results = [];
@@ -41,8 +41,8 @@ function pick(doc, name, value) {
   el.checked = true;
   el.dispatchEvent(new Event('change', { bubbles: true }));
 }
-function tick(el, on) { el.checked = on; el.dispatchEvent(new Event('change', { bubbles: true })); }
 const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').trim();
+const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
 
 (async () => {
   try {
@@ -59,11 +59,14 @@ const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').tr
     }, true);
     hook(d);
     const rowsOf = () => d.querySelectorAll('#pieces .piece');
+    const ticked = () => d.querySelectorAll('.clock-list li.in').length;
 
     check('brief: starts with one piece row', rowsOf().length === 1, rowsOf().length);
-    check('brief: starts as a Single', text(d, '#sum-size') === 'Single', text(d, '#sum-size'));
-    check('brief: all four things start as still to come', d.querySelectorAll('.clock-list li.in').length === 0 && text(d, '#clock-verdict').includes('Still to come'), text(d, '#clock-verdict'));
+    check('brief: starts with no pieces counted', text(d, '#sum-size') === 'No pieces yet', text(d, '#sum-size'));
+    check('brief: all four things start as still to come', ticked() === 0 && text(d, '#clock-verdict').includes('Still to come'), text(d, '#clock-verdict'));
     check('brief: agency question is hidden for brand teams', d.getElementById('agency-mode').hidden === true, '');
+    const offered = [...d.querySelectorAll('#catalogue-items option')].map((o) => o.value);
+    check('brief: the piece box offers the seven catalogue pieces', same(offered, ITEMS) && rowsOf()[0].querySelector('[name=piece_name]').getAttribute('list') === 'catalogue-items', offered.join(', '));
 
     d.getElementById('send-brief').click();
     await sleep(50);
@@ -73,29 +76,31 @@ const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').tr
 
     type(d, '#b-name', 'Thandi Mokoena');
     type(d, '#b-company', 'Verlane Bank');
+    type(d, '#b-approver', 'Sipho Dlamini');
     type(d, '#b-reference', 'Our presentation template: navy, a serif headline, thin line drawings');
     type(d, '#b-link', 'https://example.com/deck');
     pick(d, 'guidelines', 'yes');
-    type(d, rowsOf()[0].querySelector('[name=piece_name]'), 'Hole sign');
-    type(d, rowsOf()[0].querySelector('[name=piece_spec]'), 'A1 portrait, printed, on the course');
-    type(d, rowsOf()[0].querySelector('[name=piece_qty]'), '18');
+    type(d, rowsOf()[0].querySelector('[name=piece_name]'), 'Wayfinding signage');
+    type(d, rowsOf()[0].querySelector('[name=piece_spec]'), '1200 x 600 mm, printed, at reception');
+    type(d, rowsOf()[0].querySelector('[name=piece_qty]'), '6');
     d.getElementById('add-piece').click();
     d.getElementById('add-piece').click();
-    type(d, rowsOf()[1].querySelector('[name=piece_name]'), 'Course map');
-    type(d, rowsOf()[2].querySelector('[name=piece_name]'), 'Scorecard');
+    type(d, rowsOf()[1].querySelector('[name=piece_name]'), 'Flyer');
+    type(d, rowsOf()[2].querySelector('[name=piece_name]'), 'Email signature');
     pick(d, 'copy', 'yes');
     pick(d, 'specs', 'no');
     type(d, '#b-due', '2026-11-27');
     await sleep(50);
 
-    check('brief: three pieces read as a Set', text(d, '#sum-size') === 'Set' && text(d, '#sum-count') === '3 pieces', text(d, '#sum-size') + ' / ' + text(d, '#sum-count'));
-    check('brief: a Set of three shows its fee, from ' + setFee(3), text(d, '#sum-note').includes('from ' + setFee(3) + '.'), text(d, '#sum-note'));
-    check('brief: three of the four things are ticked', d.querySelectorAll('.clock-list li.in').length === 3, d.querySelectorAll('.clock-list li.in').length);
+    check('brief: three named pieces are counted as 3 pieces', text(d, '#sum-size') === '3 pieces', text(d, '#sum-size'));
+    check('brief: no fee or price is shown before the job sheet', !/R\s?\d/.test(text(d, '.brief-summary')), text(d, '.brief-summary').slice(0, 160));
+    check('brief: three of the four things are ticked', ticked() === 3, ticked());
     check('brief: only specifications are named as still to come', text(d, '#clock-verdict').includes('Still to come: specifications.'), text(d, '#clock-verdict'));
     check('brief: the warning clears once you type', !d.getElementById('brief-status').classList.contains('bad'), text(d, '#brief-status'));
-    const preview = text(d, '#brief-preview');
-    check('brief: the preview lists each piece with its quantity', preview.includes('1. Hole sign: A1 portrait, printed, on the course (x18)') && preview.includes('3. Scorecard'), preview);
-    check('brief: the preview carries size, guidelines, copy and date', preview.includes('3. WHAT WE NEED NEXT (Set, 3 pieces)') && preview.includes('In hand. Attached or linked with this email.') && preview.includes('Final copy: Final and signed off.') && preview.includes('Specifications: Still to come.') && preview.includes('Friday 27 November 2026'), preview);
+    let preview = text(d, '#brief-preview');
+    check('brief: the preview lists each piece with its quantity', preview.includes('1. Wayfinding signage: 1200 x 600 mm, printed, at reception (x6)') && preview.includes('3. Email signature'), preview);
+    check('brief: the preview carries the count, guidelines, copy and date', preview.includes('3. WHAT WE NEED NEXT (3 pieces)') && preview.includes('In hand. Attached or linked with this email.') && preview.includes('Final copy: Final and signed off.') && preview.includes('Specifications: Still to come.') && preview.includes('Friday 27 November 2026'), preview);
+    check('brief: the preview names the approver', preview.includes('Approver: Sipho Dlamini'), preview.slice(0, 260));
     check('brief: the preview has no long dashes', !/[–—]/.test(preview), '');
 
     d.getElementById('send-brief').click();
@@ -103,7 +108,7 @@ const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').tr
     check('brief: a complete brief opens an email to ' + EMAIL, Boolean(mail) && mail.startsWith('mailto:' + EMAIL + '?subject='), mail);
     const body = mail ? decodeURIComponent(mail.split('&body=')[1] || '') : '';
     check('brief: the email says the same as the preview', body.replace(/\r\n/g, '\n').includes('1. THE REFERENCE\nOur presentation template') && body.includes('Thandi Mokoena, Verlane Bank'), body.slice(0, 300));
-    check('brief: the subject names the company and the size', Boolean(mail) && decodeURIComponent(mail).includes('subject=Brief for Has Legs: Verlane Bank (Set)'), mail && decodeURIComponent(mail).slice(0, 120));
+    check('brief: the subject names the company and the number of pieces', Boolean(mail) && decodeURIComponent(mail).includes('subject=Brief for Has Legs: Verlane Bank (3 pieces)'), mail && decodeURIComponent(mail).slice(0, 120));
     check('brief: the email keeps its line breaks', Boolean(mail) && mail.includes('%0D%0A') && !mail.replace(/%0D%0A/g, '').includes('%0A'), '');
     check('brief: the email link is short enough for mail programmes', Boolean(mail) && mail.length < 1800, mail && mail.length);
     check('brief: the sender is told to attach the files', text(d, '#brief-status').includes('Attach your reference'), text(d, '#brief-status'));
@@ -112,22 +117,18 @@ const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').tr
     await sleep(50);
     check('brief: download gives a text file', download === 'has-legs-brief.txt|blob:', download);
 
-    const whole = d.querySelector('input[name=whole]');
-    tick(whole, true);
+    type(d, '#b-approver', '');
     await sleep(30);
-    check('brief: everything for one event reads as a Kit, quoted', text(d, '#sum-size') === 'Kit' && text(d, '#sum-note').includes('Quoted within one working day'), text(d, '#sum-size') + ' / ' + text(d, '#sum-note'));
-    tick(whole, false);
-    while (rowsOf().length < SETMAX + 1) { d.getElementById('add-piece').click(); }
-    rowsOf().forEach((row, i) => { if (i >= 3) type(d, row.querySelector('[name=piece_name]'), 'Piece ' + (i + 1)); });
-    await sleep(30);
-    check('brief: more than ' + SETMAX + ' pieces read as a Kit', text(d, '#sum-size') === 'Kit' && text(d, '#sum-count') === (SETMAX + 1) + ' pieces', text(d, '#sum-size') + ' / ' + text(d, '#sum-count'));
-    rowsOf()[SETMAX].querySelector('.piece-remove').click();
-    await sleep(30);
-    check('brief: removing one drops back to a full Set, from ' + setFee(SETMAX), text(d, '#sum-size') === 'Set' && text(d, '#sum-note').includes('from ' + setFee(SETMAX) + '.'), text(d, '#sum-size') + ' / ' + text(d, '#sum-note'));
+    check('brief: with no approver named, the sender is the approver', text(d, '#brief-preview').includes('Approver: me, Thandi Mokoena'), text(d, '#brief-preview').slice(0, 260));
+    type(d, '#b-approver', 'Sipho Dlamini');
 
     pick(d, 'guidelines', 'no');
     await sleep(30);
-    check('brief: no brand guidelines shows the back-to-your-agency note', d.getElementById('guidelines-note').hidden === false && text(d, '#clock-verdict').includes('Still to come: brand guidelines and specifications.'), text(d, '#clock-verdict'));
+    check('brief: guidelines not to hand shows the ask-your-agency note', d.getElementById('guidelines-note').hidden === false && d.getElementById('guidelines-none-note').hidden === true && text(d, '#clock-verdict').includes('Still to come: brand guidelines and specifications.'), text(d, '#clock-verdict'));
+    pick(d, 'guidelines', 'none');
+    await sleep(30);
+    check('brief: a brand with no guidelines is told it can still start', d.getElementById('guidelines-none-note').hidden === false && d.getElementById('guidelines-note').hidden === true && text(d, '#guidelines-none-note').includes('We can still start.'), text(d, '#guidelines-none-note'));
+    check('brief: no guidelines does not hold the brief back', ticked() === 3 && text(d, '[data-clock="guidelines"] .state') === "We'll write them" && text(d, '#brief-preview').includes('We have none. Please work the rules out from our website and the reference.'), ticked() + ' / ' + text(d, '[data-clock="guidelines"] .state'));
 
     pick(d, 'role', 'agency');
     await sleep(30);
@@ -137,10 +138,10 @@ const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').tr
     check('brief: the white-label choice reaches the email', text(d, '#brief-preview').includes('white-labelled: we deliver it under our own name'), '');
 
     const saved = JSON.parse(w.localStorage.getItem(KEY) || 'null');
-    check('brief: the draft is saved on this device', Boolean(saved) && saved.name === 'Thandi Mokoena' && saved.pieces.length === SETMAX, JSON.stringify(saved).slice(0, 200));
+    check('brief: the draft is saved on this device', Boolean(saved) && saved.name === 'Thandi Mokoena' && saved.approver === 'Sipho Dlamini' && saved.pieces.length === 3, JSON.stringify(saved).slice(0, 200));
     w = await load('brief/');
     d = w.document; hook(d);
-    check('brief: the draft survives a reload', d.querySelector('#b-name').value === 'Thandi Mokoena' && rowsOf().length === SETMAX && text(d, '#sum-size') === 'Set' && d.querySelector('input[name=role][value=agency]').checked, d.querySelector('#b-name').value + ' / ' + rowsOf().length);
+    check('brief: the draft survives a reload', d.querySelector('#b-name').value === 'Thandi Mokoena' && rowsOf().length === 3 && text(d, '#sum-size') === '3 pieces' && d.querySelector('input[name=role][value=agency]').checked && d.querySelector('input[name=guidelines][value=none]').checked, d.querySelector('#b-name').value + ' / ' + rowsOf().length);
 
     mail = null;
     type(d, '#b-notes', 'Long note. '.repeat(260));
@@ -150,52 +151,88 @@ const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').tr
 
     d.getElementById('reset-brief').click();
     await sleep(30);
-    check('brief: clearing empties the form and the saved draft', d.querySelector('#b-name').value === '' && rowsOf().length === 1 && w.localStorage.getItem(KEY) === null, w.localStorage.getItem(KEY));
+    check('brief: clearing empties the form and the saved draft', d.querySelector('#b-name').value === '' && d.querySelector('#b-approver').value === '' && rowsOf().length === 1 && w.localStorage.getItem(KEY) === null, w.localStorage.getItem(KEY));
 
-    w = await load('brief/?pieces=4&kit=1&from=agency');
+    w = await load('brief/?item=Banner+advert&from=agency');
     d = w.document;
-    check('brief: a link from the sizer arrives with its rows ready', rowsOf().length === 4 && d.querySelector('input[name=whole]').checked && d.querySelector('input[name=role][value=agency]').checked && d.getElementById('agency-mode').hidden === false, rowsOf().length);
+    check('brief: a link from the catalogue arrives with its piece listed', rowsOf().length === 1 && rowsOf()[0].querySelector('[name=piece_name]').value === 'Banner advert' && text(d, '#sum-size') === '1 piece' && d.querySelector('input[name=role][value=agency]').checked, rowsOf().length + ' / ' + text(d, '#sum-size'));
+    w = await load('brief/?item=Flyer');
+    d = w.document;
+    check('brief: a second catalogue link adds to the brief already begun', rowsOf().length === 2 && rowsOf()[1].querySelector('[name=piece_name]').value === 'Flyer' && text(d, '#sum-size') === '2 pieces', rowsOf().length + ' / ' + text(d, '#sum-size'));
+    w = await load('brief/?item=Flyer');
+    d = w.document;
+    check('brief: the same link twice does not list the piece twice', rowsOf().length === 2, rowsOf().length);
     w.localStorage.removeItem(KEY);
 
-    // ---------- Size your job ----------
-    w = await load('pricing/');
+    // ---------- Catalogue ----------
+    w = await load('catalogue/');
     d = w.document;
-    const S = (sel) => text(d, '[data-sizer] ' + sel);
-    check('sizer: starts at three pieces, a Set from ' + setFee(3), S('[data-count]') === '3' && S('[data-size]') === 'A Set.' && S('[data-fee]') === 'Fixed fee from ' + setFee(3), S('[data-count]') + ' / ' + S('[data-size]') + ' / ' + S('[data-fee]'));
-    check('sizer: draws three walking pieces', d.querySelectorAll('[data-parade] svg').length === 3, d.querySelectorAll('[data-parade] svg').length);
-    const plus = d.querySelector('[data-step="1"]'), minus = d.querySelector('[data-step="-1"]');
-    for (let n = 3; n < SETMAX; n++) plus.click();
-    check('sizer: ' + SETMAX + ' pieces are still a Set, from ' + setFee(SETMAX), S('[data-size]') === 'A Set.' && S('[data-fee]') === 'Fixed fee from ' + setFee(SETMAX), S('[data-size]') + ' / ' + S('[data-fee]'));
-    plus.click();
-    check('sizer: one more is a Kit, quoted', S('[data-size]') === 'A Kit.' && S('[data-fee]').includes('Quoted per kit'), S('[data-size]') + ' / ' + S('[data-fee]'));
-    for (let n = 0; n < SETMAX; n++) minus.click();
-    check('sizer: one piece is a Single from ' + money(SINGLE), S('[data-count]') === '1' && S('[data-size]') === 'A Single.' && S('[data-fee]') === 'Fixed fee from ' + money(SINGLE) && minus.disabled, S('[data-count]') + ' / ' + S('[data-size]') + ' / ' + S('[data-fee]'));
-    tick(d.querySelector('[data-whole]'), true);
-    check('sizer: everything for one event makes it a Kit', S('[data-size]') === 'A Kit.', S('[data-size]'));
-    check('sizer: the start button carries the count to the brief', d.querySelector('[data-start]').getAttribute('href') === '../brief/?pieces=1&kit=1', d.querySelector('[data-start]').getAttribute('href'));
-    const cards = text(d, '.sizes');
-    check('pricing: the size cards show the prices from site.json', cards.includes(money(SINGLE)) && cards.includes(setFee(2)) && cards.includes(setFee(SETMAX)), cards.slice(0, 200));
+    const cards = [...d.querySelectorAll('.cat-card:not(.open)')];
+    check('catalogue: lists the seven pieces, in order', same(cards.map((c) => text(c, 'h3')), ITEMS), cards.map((c) => text(c, 'h3')).join(', '));
+    check('catalogue: every piece has a drawing with a description', cards.every((c) => (c.querySelector('svg[role=img]') || { getAttribute: () => '' }).getAttribute('aria-label').length > 40), '');
+    const carried = cards.map((c) => new URL(c.querySelector('a.link').href).searchParams.get('item'));
+    check('catalogue: every "Add to a brief" link carries its own piece', same(carried, ITEMS), carried.join(', '));
+    check('catalogue: says the list is open', text(d, '.cat-card.open').includes('The list is open'), text(d, '.cat-card.open'));
+    check('catalogue: shows no price figures, only how fees work', !/R\s?\d/.test(text(d, 'main')) && text(d, '#fees').includes('Fixed') && text(d, '#fees').includes('Paid up front'), (text(d, 'main').match(/R\s?\d+/) || [''])[0]);
 
-    // ---------- FAQ ----------
-    w = await load('faq/');
+    // ---------- How it works ----------
+    w = await load('how-it-works/');
     d = w.document;
-    check('faq: every question is on the page', d.querySelectorAll('.faq details').length >= 20, d.querySelectorAll('.faq details').length);
-    d.querySelector('[data-filter="prices"]').click();
-    check('faq: a topic button shows just that topic', [...d.querySelectorAll('.faq-group')].filter((g) => !g.hidden).length === 1 && !d.getElementById('prices').hidden, '');
-    w.location.hash = '#q-own-ai';
-    await sleep(120);
-    check('faq: a link to one question opens it', d.getElementById('q-own-ai').open === true && d.getElementById('ai').hidden === false, d.getElementById('q-own-ai').open);
+    const track = [...d.querySelectorAll('.track li')];
+    check('how it works: five steps at a glance, in order', same(track.map((li) => text(li, 'strong')), ['Brief', 'Job sheet', 'Tearsheet', 'Proof', 'Files']), track.map((li) => text(li, 'strong')).join(', '));
+    check('how it works: the two sign-offs are the tearsheet and the proof', same(track.filter((li) => li.classList.contains('sign')).map((li) => text(li, 'strong')), ['Tearsheet', 'Proof']), '');
+    check('how it works: each step at a glance has a step written out below', d.querySelectorAll('.long-steps > li').length === track.length, d.querySelectorAll('.long-steps > li').length);
+    check('how it works: the three kinds of feedback, in order', same([...d.querySelectorAll('.kinds .tier h3')].map((h) => h.textContent.trim()), ['Correction', 'Change', 'Addition']), '');
+    check('how it works: asks for four things', d.querySelectorAll('.inputs .input-card').length === 4, d.querySelectorAll('.inputs .input-card').length);
+
+    // ---------- Work and Studio ----------
+    w = await load('work/');
+    d = w.document;
+    const demos = [...d.querySelectorAll('.demo')];
+    check('work: three demonstrations on one page, each labelled as an invented brand', demos.length === 3 && demos.every((s) => text(s, '.demo-label').includes('Demonstration: invented brand')), demos.length);
+    check('work: each demonstration shows its reference and at least three new pieces', demos.every((s) => s.querySelectorAll('.ref-grid .stage svg').length === 1 && s.querySelectorAll('.kit .stage svg').length >= 3), demos.map((s) => s.querySelectorAll('.kit .stage svg').length).join(', '));
+    check('work: the three links at the top each land on a demonstration', [...d.querySelectorAll('.jump a')].every((a) => d.getElementById(a.getAttribute('href').slice(1)) !== null) && d.querySelectorAll('.jump a').length === 3, '');
+    w = await load('studio/');
+    d = w.document;
+    check('studio: three checks between the build and the proof', d.querySelectorAll('.gates .gate').length === 3 && d.querySelectorAll('.gates .gate-end').length === 2, d.querySelectorAll('.gates .gate').length);
+    check('studio: five promises', d.querySelectorAll('.promises li').length === 5, d.querySelectorAll('.promises li').length);
+
+    // ---------- Said once: each fact has one home ----------
+    const mains = {};
+    for (const p of PAGES) {
+      const html = await (await fetch(BASE + p)).text();
+      mains[p] = new DOMParser().parseFromString(html, 'text/html').querySelector('main').textContent;
+    }
+    const where = (re) => PAGES.filter((p) => re.test(mains[p]));
+    const once = (name, re, expected) => check('said once: ' + name, same(where(re), expected), 'found on: ' + (where(re).map((p) => '/' + p).join(', ') || 'no page'));
+    once('the three kinds of feedback are explained on How it works only', /Correction/, ['how-it-works/']);
+    once('the five steps are set out on How it works only', /job sheet[^.]*tearsheet|We reply with a job sheet\b/i, ['how-it-works/', 'brief/']);
+    once('final copy is asked for on How it works and the brief form only', /Final copy/, ['how-it-works/', 'brief/']);
+    once('how fees work is on the Catalogue only', /refund|Paid up front|hourly rate/i, ['catalogue/']);
+    once('the three checks are on the Studio page only', /fresh eye/i, ['studio/']);
+    once('the promise about AI training is on the Studio page only', /\btrain/i, ['studio/']);
+    once('white-label is explained on Agencies only, and offered on the brief form', /white-label/i, ['agencies/', 'brief/']);
+    once('idea work is defined on Home, and the agency rule on Agencies', /Idea work/, ['', 'agencies/']);
+    once('no page still sells a Single, a Set or a Kit', /\b(Single|Kit)\b|\ba Set\b/, []);
+    once('no page shows a price in rand', /R\s?\d{3}/, []);
+
+    for (const p of RETIRED) {
+      const status = (await fetch(BASE + p)).status;
+      check('retired: /' + p + ' is gone', status === 404, status);
+    }
 
     // ---------- Home ----------
     w = await load('');
     d = w.document;
     await sleep(300);
-    check('home: the first FAQ answer is open', d.querySelector('[data-open-first] details').open === true, '');
     check('home: the main script ran', w.hasLegsReady === true && !d.documentElement.classList.contains('no-reveal'), d.documentElement.className);
     check('home: no cookies are set', d.cookie === '', d.cookie);
     const loaded = w.performance.getEntriesByType('resource').map((r) => r.name);
     check('home: nothing loads from another website', loaded.length > 3 && loaded.every((u) => u.startsWith(location.origin)), loaded.filter((u) => !u.startsWith(location.origin)).join(' '));
     check('home: the briefs address is the one in site.json', text(d, '.call .addr') === EMAIL, text(d, '.call .addr'));
+    const posts = [...d.querySelectorAll('.signpost')].map((a) => a.getAttribute('href'));
+    check('home: four signposts lead to the four other pages', same(posts, ['how-it-works/', 'catalogue/', 'studio/', 'agencies/']), posts.join(', '));
+    check('home: says each thing once, with no step list, fee list or agency offer of its own', d.querySelectorAll('.long-steps, .track, .facts, .ways, .promises, .gates').length === 0, '');
 
     // ---------- Menu on a phone ----------
     w = await load('how-it-works/', 390);
@@ -206,16 +243,17 @@ const text = (doc, sel) => ((doc.querySelector(sel) || {}).textContent || '').tr
     await sleep(350);
     check('menu: it opens', nav.classList.contains('open') && btn.getAttribute('aria-expanded') === 'true' && w.getComputedStyle(nav).visibility === 'visible' && d.documentElement.classList.contains('menu-open') && text(d, '.menu-word') === 'Close', '');
     check('menu: the page you are on is marked', text(d, '#site-nav a[aria-current="page"]') === 'How it works', '');
+    check('menu: five pages and the brief button', same([...nav.querySelectorAll('a')].map((a) => a.textContent.trim()), ['Work', 'How it works', 'Catalogue', 'Studio', 'Agencies', 'Send a brief']), [...nav.querySelectorAll('a')].map((a) => a.textContent.trim()).join(', '));
     d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     await sleep(350);
     check('menu: Escape closes it', !nav.classList.contains('open') && btn.getAttribute('aria-expanded') === 'false' && !d.documentElement.classList.contains('menu-open'), '');
 
     // ---------- No sideways scrolling on a phone ----------
-    for (const p of ['', 'work/', 'work/golf-day/', 'work/in-store-set/', 'work/staff-conference/', 'how-it-works/', 'pricing/', 'agencies/', 'studio/', 'faq/', 'brief/', 'privacy/', '404.html']) {
+    for (const p of PAGES) {
       w = await load(p, 390);
       check('phone (390 wide): no sideways scroll on /' + p, w.document.documentElement.scrollWidth <= 390, w.document.documentElement.scrollWidth);
     }
-    for (const p of ['', 'work/golf-day/', 'pricing/', 'agencies/', 'brief/']) {
+    for (const p of ['', 'work/', 'how-it-works/', 'catalogue/', 'studio/', 'brief/']) {
       w = await load(p, 320);
       check('small phone (320 wide): no sideways scroll on /' + p, w.document.documentElement.scrollWidth <= 320, w.document.documentElement.scrollWidth);
     }

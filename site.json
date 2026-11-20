@@ -9,12 +9,5 @@
 
   "email": "briefs@haslegs.example",
 
-  "prices": {
-    "currency": "R",
-    "single_from": 2400,
-    "each_further_piece_from": 1800,
-    "set_max_pieces": 5
-  },
-
   "year": 2026
 }

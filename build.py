@@ -4,13 +4,13 @@
     python build.py              build src/ into docs/ (what GitHub Pages serves)
     python build.py --out DIR    build somewhere else, for a local preview
 
-The facts that change (briefs address, prices, web address) live in site.json.
+The facts that change (briefs address, web address) live in site.json.
 Pages live in src/pages, shared pieces in src/partials, and everything in
 src/static is copied to assets/.
 
 The build stops with a plain message if a page uses a value that does not
-exist, a link or anchor points nowhere, an id is used twice on a page, or a
-long dash slips into the copy.
+exist, a link or anchor points nowhere, an id is used twice on a page, a
+long dash slips into the copy, or a promise the studio has dropped comes back.
 """
 
 import argparse
@@ -30,13 +30,19 @@ VAR = re.compile(r"\{\{\s*([\w.]+)\s*\}\}")
 FRONT = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
 LONG_DASHES = {"—": "em dash", "–": "en dash"}
 
+# Things the site used to say that are no longer true (see ../PROCESS.md).
+# The build stops if one of them creeps back into a page.
+RETIRED = {
+    "24 hour": "a 24-hour turnaround is no longer promised",
+    "24-hour": "a 24-hour turnaround is no longer promised",
+    "pool of designers": "the pipeline builds and a designer directs",
+    "can't start without": "a brand with no guidelines can still start",
+    "one round of changes": "changes now come as one list, alongside free corrections",
+}
+
 
 class BuildError(Exception):
     pass
-
-
-def money(amount, currency):
-    return f"{currency}{amount:,.0f}"
 
 
 def lookup(ctx, dotted, where):
@@ -115,6 +121,10 @@ def check(out, base_path, site_url):
         rel = path.relative_to(out).as_posix()
         if "{{" in text:
             problems.append(f"{rel}: unfilled {{{{ }}}} placeholder")
+        lowered = text.lower()
+        for phrase, why in RETIRED.items():
+            if phrase in lowered:
+                problems.append(f"{rel}: says '{phrase}', but {why}")
         seen = set()
         for ident in collector.ids:
             if ident in seen:
@@ -165,10 +175,6 @@ def check(out, base_path, site_url):
 
 def build(out):
     site = json.loads((ROOT / "site.json").read_text(encoding="utf-8"))
-    prices = site["prices"]
-    cur = prices["currency"]
-    single, further = prices["single_from"], prices["each_further_piece_from"]
-    set_max = prices["set_max_pieces"]
 
     if out.exists():
         shutil.rmtree(out)
@@ -194,22 +200,11 @@ def build(out):
             url = site["url"] + rel
         ctx = {
             "site": {**{k: v for k, v in site.items() if not isinstance(v, dict)}, "robots": robots},
-            "price": {
-                "single": money(single, cur),
-                "further": money(further, cur),
-                "set": money(single + further, cur),
-                "set_three": money(single + further * 2, cur),
-                "set_full": money(single + further * (set_max - 1), cur),
-                "single_raw": single,
-                "further_raw": further,
-                "set_max": set_max,
-                "currency": cur,
-            },
             "root": root,
             "home": root or "./",
             "v": version,
         }
-        # Settings such as the description may use values too, for example a price.
+        # Settings such as the description may use values too, for example the briefs address.
         meta = {key: render(value, ctx, page_path.name) for key, value in meta.items()}
         ctx["page"] = {"og_title": meta["title"], "scripts": "", "body_class": "", **meta, "url": url}
         scripts = [s.strip() for s in meta.get("scripts", "").split(",") if s.strip()]
@@ -243,7 +238,7 @@ def main():
     except BuildError as err:
         sys.exit(f"BUILD FAILED\n  {err}")
     print(f"Built {built} pages into {out}")
-    print(f"Checked {link_count} links and anchors, ids and dashes: all good.")
+    print(f"Checked {link_count} links and anchors, ids, dashes and dropped promises: all good.")
 
 
 if __name__ == "__main__":

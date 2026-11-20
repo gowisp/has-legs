@@ -1,0 +1,18 @@
+<svg viewBox="0 0 420 230" role="img" aria-label="An email signature in Verlane Bank's look, shown under the last lines of an email. A yellow rule, a name in the serif, a job title, contact details and the bank's name beside a yellow dot.">
+  <rect x="1" y="1" width="418" height="228" rx="10" fill="#FFFFFF" stroke="#DDE2EA" stroke-width="1.5"/>
+  <g fill="#E3E7EE">
+    <rect x="24" y="26" width="372" height="6" rx="3"/>
+    <rect x="24" y="42" width="330" height="6" rx="3"/>
+    <rect x="24" y="58" width="190" height="6" rx="3"/>
+  </g>
+  <rect x="24" y="82" width="70" height="6" rx="3" fill="#C9CFDA"/>
+  <line x1="27" y1="116" x2="27" y2="204" stroke="#F2B33D" stroke-width="5" stroke-linecap="round"/>
+  <text x="44" y="134" class="v-serif" font-size="21" fill="#12284C">Thandi Mokoena</text>
+  <text x="44" y="153" class="v-sans" font-size="10.500" font-weight="700" fill="#12284C">Head of Home Loans</text>
+  <text x="44" y="174" class="v-sans" font-size="9.500" fill="#5C6884">021 555 0142</text>
+  <text x="44" y="188" class="v-sans" font-size="9.500" fill="#5C6884">thandi@verlanebank.example</text>
+  <circle cx="49" cy="203" r="4.500" fill="#F2B33D"/>
+  <text x="60" y="207.500" class="v-serif" font-size="12.500" fill="#12284C">Verlane Bank</text>
+  <circle cx="346" cy="138" r="11" fill="#F2B33D"/>
+  <path d="M262 198c24 0 36-20 58-14s30 18 50 8 14-6 26-6" fill="none" stroke="#12284C" stroke-width="2" stroke-linecap="round"/>
+</svg>

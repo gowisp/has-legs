@@ -1,6 +1,6 @@
 ---
 title: Send a brief | Has Legs
-description: Build your brief in about five minutes. Tell us the reference, the pieces you need next and when you need them. We come back with a fixed fee and a time.
+description: Build your brief in about five minutes. Tell us the reference, the pieces you need next and when you need them. We reply with a job sheet that sets out every piece, a fixed fee and a delivery time.
 path: brief/
 nav: brief
 scripts: brief.js
@@ -11,7 +11,7 @@ scripts: brief.js
     <div>
       <p class="eyebrow">Send a brief</p>
       <h1 class="own-line">Tell us what you need <em>next.</em></h1>
-      <p class="lede">Six short sections, about five minutes. We come back with a fixed fee and a time. Nothing you type leaves this page until you send it yourself, from your own email.</p>
+      <p class="lede">Six short sections, about five minutes. We reply with a job sheet: every piece, a fixed fee and a delivery time. Nothing you type leaves this page until you send it yourself, from your own email.</p>
     </div>
     <div class="mascot">{{> mascot/envelope.svg}}</div>
   </div>
@@ -29,16 +29,14 @@ scripts: brief.js
           <li>Your brand guidelines, attached or linked</li>
           <li>What you need next: the pieces, their sizes and where they'll be used</li>
           <li>Final copy and specifications, or when they'll be ready</li>
-          <li>When you need finished artwork</li>
+          <li>When you need the finished files, and who approves on your side</li>
         </ol>
       </div>
     </noscript>
 
     <div class="brief-layout">
 
-      <form class="brief-form" id="brief-form" novalidate
-            data-email="{{site.email}}" data-single="{{price.single_raw}}" data-further="{{price.further_raw}}"
-            data-set-max="{{price.set_max}}" data-currency="{{price.currency}}">
+      <form class="brief-form" id="brief-form" novalidate data-email="{{site.email}}">
 
         <div class="fs" role="group" aria-labelledby="fs-you">
           <h2 id="fs-you"><span aria-hidden="true">01</span> About you</h2>
@@ -67,6 +65,11 @@ scripts: brief.js
               <label class="choice"><input type="radio" name="mode" value="unsure"><span>Not sure yet</span></label>
             </div>
           </fieldset>
+          <div class="field">
+            <label for="b-approver">Who approves on your side? <span class="opt">(leave empty if it's you)</span></label>
+            <input class="input" id="b-approver" name="approver" type="text" autocomplete="off" aria-describedby="b-approver-hint">
+            <p class="hint" id="b-approver-hint">One person gathers everyone's comments and signs off.</p>
+          </div>
         </div>
 
         <div class="fs" role="group" aria-labelledby="fs-reference">
@@ -85,29 +88,36 @@ scripts: brief.js
 
         <div class="fs" role="group" aria-labelledby="fs-guidelines">
           <h2 id="fs-guidelines"><span aria-hidden="true">03</span> Brand guidelines</h2>
-          <p>Your brand's own rules for logo, colour and type. We need them alongside the reference.</p>
+          <p>Your brand's own rules for logo, colour and type. We ask for them alongside the reference.</p>
           <fieldset class="field">
             <legend>Do you have them?</legend>
             <div class="choices">
               <label class="choice"><input type="radio" name="guidelines" value="yes"><span>Yes, to hand</span></label>
               <label class="choice"><input type="radio" name="guidelines" value="no"><span>Not to hand</span></label>
+              <label class="choice"><input type="radio" name="guidelines" value="none"><span>We don't have any</span></label>
             </div>
           </fieldset>
-          <p class="reveal-note" id="guidelines-note" hidden><strong>We can't start without them.</strong> Go straight back to your agency and ask for the brand guidelines. We don't guess at a brand or apply it at random. You can still send the brief now and the guidelines when you have them.</p>
+          <p class="reveal-note" id="guidelines-note" hidden><strong>Ask your lead agency for them.</strong> They'll have them on file. You can send the brief now and the guidelines when they arrive.</p>
+          <p class="reveal-note" id="guidelines-none-note" hidden><strong>We can still start.</strong> We'd much rather work from guidelines. Where a brand has none, we write the rules down ourselves from your website and your reference, and you sign them off before we build anything else.</p>
         </div>
 
         <div class="fs" role="group" aria-labelledby="fs-pieces">
           <h2 id="fs-pieces"><span aria-hidden="true">04</span> What you need next</h2>
-          <p>List each piece. Say what it is, then its size and where it will be used.</p>
+          <p>List each piece. Pick it from the catalogue or type your own, then say its size and where it will be used.</p>
+          <datalist id="catalogue-items">
+            <option value="Flyer"></option>
+            <option value="Banner advert"></option>
+            <option value="PowerPoint"></option>
+            <option value="Letterhead"></option>
+            <option value="Business card"></option>
+            <option value="Wayfinding signage"></option>
+            <option value="Email signature"></option>
+          </datalist>
           <ol class="piece-list" id="pieces"></ol>
           <button type="button" class="btn ghost small piece-add" id="add-piece">
             <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10h12M10 4v12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
             Add another piece
           </button>
-          <p class="piece-count" id="piece-count" aria-live="polite"></p>
-          <p style="margin-top:1rem">
-            <label class="choice"><input type="checkbox" name="whole" value="yes"><span>This is everything for one event or campaign</span></label>
-          </p>
         </div>
 
         <div class="fs" role="group" aria-labelledby="fs-copy">
@@ -125,7 +135,7 @@ scripts: brief.js
               <label class="choice"><input type="radio" name="specs" value="yes"><span>Yes, to hand</span></label>
               <label class="choice"><input type="radio" name="specs" value="no"><span>Still to come</span></label>
             </div>
-            <p class="hint" style="margin-top:0.7rem">Specifications are the sizes, bleed and file formats your printer or venue asks for.</p>
+            <p class="hint" style="margin-top:0.7rem">Specifications are the sizes, bleed and file formats your printer, venue or platform asks for.</p>
           </fieldset>
         </div>
 
@@ -133,7 +143,7 @@ scripts: brief.js
           <h2 id="fs-when"><span aria-hidden="true">06</span> Timing</h2>
           <div class="field-row">
             <div class="field">
-              <label for="b-due">When do you need finished artwork? <span class="opt">(optional)</span></label>
+              <label for="b-due">When do you need the finished files? <span class="opt">(optional)</span></label>
               <input class="input" id="b-due" name="due" type="date">
             </div>
           </div>
@@ -147,11 +157,10 @@ scripts: brief.js
 
       <aside class="brief-summary" aria-labelledby="sum-title">
         <h2 id="sum-title">Your brief so far</h2>
-        <p class="sum-size" id="sum-size">Single</p>
-        <p class="sum-count" id="sum-count">No pieces listed yet</p>
-        <p class="sum-note" id="sum-note"></p>
+        <p class="sum-size" id="sum-size">No pieces yet</p>
+        <p class="sum-note">We reply with a job sheet: every piece, a fixed fee and a delivery time.</p>
 
-        <h3 class="clock-title">The clock starts with four things</h3>
+        <h3 class="clock-title">Four things make a brief ready</h3>
         <ul class="clock-list">
           <li data-clock="reference">{{> icon-tick.svg}}The reference <span class="state">To come</span></li>
           <li data-clock="guidelines">{{> icon-tick.svg}}Brand guidelines <span class="state">To come</span></li>

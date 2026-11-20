@@ -7,26 +7,16 @@
   var form = document.getElementById("brief-form");
   if (!form) { return; }
 
-  var KEY = "haslegs.brief.v1";
+  var KEY = "haslegs.brief.v2";
   var MAX_LINK = 1800; /* some mail programmes drop longer mailto links */
 
-  var cfg = {
-    email: form.getAttribute("data-email"),
-    single: Number(form.getAttribute("data-single")),
-    further: Number(form.getAttribute("data-further")),
-    setMax: Number(form.getAttribute("data-set-max")),
-    currency: form.getAttribute("data-currency")
-  };
+  var cfg = { email: form.getAttribute("data-email") };
 
   var $ = function (id) { return document.getElementById(id); };
   var list = $("pieces");
   var statusBox = $("brief-status");
-  var examples = ["Hole sign", "Course map", "Wayfinding sign", "Scorecard", "Welcome banner", "Cart card"];
-  var specExamples = ["A1 portrait, printed, on the course", "A2 landscape, printed, at registration", "1200 x 600 mm, printed, on posts", "A5 folded, printed", "850 x 2000 mm pull-up", "A5, printed, one per cart"];
-
-  function money(amount) {
-    return cfg.currency + String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
+  var examples = ["Flyer", "Banner advert", "PowerPoint", "Letterhead", "Business card", "Wayfinding signage", "Email signature"];
+  var specExamples = ["A5, printed, handed out at the open day", "728 x 90 and 300 x 250, on our website", "16:9, about 20 slides, for the staff update", "A4, printed, and for Word", "90 x 50 mm, printed both sides", "1200 x 600 mm, printed, at reception", "For Outlook, about 40 people"];
 
   /* ---- Piece rows ---- */
 
@@ -43,7 +33,7 @@
     var row = document.createElement("li");
     row.className = "piece";
     row.innerHTML =
-      '<label>Piece<input class="input" type="text" name="piece_name" autocomplete="off"></label>' +
+      '<label>Piece<input class="input" type="text" name="piece_name" list="catalogue-items" autocomplete="off"></label>' +
       '<label>Size, and where it will be used<input class="input" type="text" name="piece_spec" autocomplete="off"></label>' +
       '<label>How many<input class="input" type="number" name="piece_qty" min="1" max="9999" step="1" value="1" inputmode="numeric"></label>' +
       '<button type="button" class="piece-remove" aria-label="Remove this piece"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
@@ -80,9 +70,9 @@
       mode: field("mode"),
       reference: field("reference"),
       link: field("reference_link"),
+      approver: field("approver"),
       guidelines: field("guidelines"),
       pieces: pieces,
-      whole: form.elements.whole.checked,
       copy: field("copy"),
       specs: field("specs"),
       due: field("due"),
@@ -90,12 +80,12 @@
     };
   }
 
-  function sizeOf(state) {
-    var named = state.pieces.filter(function (piece) { return piece.name; }).length;
-    var count = Math.max(named, 1);
-    if (state.whole || count > cfg.setMax) { return { key: "kit", label: "Kit", count: count, named: named }; }
-    if (count === 1) { return { key: "single", label: "Single", count: 1, named: named }; }
-    return { key: "set", label: "Set", count: count, named: named };
+  function countOf(state) {
+    return state.pieces.filter(function (piece) { return piece.name; }).length;
+  }
+
+  function countWords(count) {
+    return count === 0 ? "No pieces yet" : count === 1 ? "1 piece" : count + " pieces";
   }
 
   function niceDate(value) {
@@ -110,7 +100,6 @@
   /* ---- The brief, as plain text ---- */
 
   function compose(state) {
-    var size = sizeOf(state);
     var named = state.pieces.filter(function (piece) { return piece.name; });
     var lines = [];
     var yesNo = function (value, yes, no) {
@@ -130,19 +119,21 @@
     } else {
       lines.push("We are a brand or marketing team.");
     }
+    lines.push("Approver: " + (state.approver || "me, " + (state.name || "(name)")));
 
     lines.push("", "1. THE REFERENCE");
     lines.push(state.reference || "(to come)");
     if (state.link) { lines.push("Link: " + state.link); }
 
     lines.push("", "2. BRAND GUIDELINES");
-    lines.push(yesNo(state.guidelines, "In hand. Attached or linked with this email.", "Not to hand yet. We are getting them from our agency."));
+    lines.push(state.guidelines === "none"
+      ? "We have none. Please work the rules out from our website and the reference."
+      : yesNo(state.guidelines, "In hand. Attached or linked with this email.", "Not to hand yet. We are getting them from our agency."));
 
-    lines.push("", "3. WHAT WE NEED NEXT (" + size.label + ", " + (named.length === 1 ? "1 piece" : named.length + " pieces") + ")");
+    lines.push("", "3. WHAT WE NEED NEXT (" + (named.length === 1 ? "1 piece" : named.length + " pieces") + ")");
     named.forEach(function (piece, index) {
       lines.push((index + 1) + ". " + piece.name + (piece.spec ? ": " + piece.spec : "") + (piece.qty > 1 ? " (x" + piece.qty + ")" : ""));
     });
-    if (state.whole) { lines.push("This is everything for one event or campaign."); }
 
     lines.push("", "4. COPY AND SPECIFICATIONS");
     lines.push("Final copy: " + yesNo(state.copy, "Final and signed off.", "Still to come."));
@@ -158,7 +149,8 @@
   }
 
   function subjectOf(state) {
-    return "Brief for Has Legs: " + (state.company || "new brief") + " (" + sizeOf(state).label + ")";
+    var count = countOf(state);
+    return "Brief for Has Legs: " + (state.company || "new brief") + " (" + (count === 1 ? "1 piece" : count + " pieces") + ")";
   }
 
   /* ---- Live summary ---- */
@@ -170,28 +162,17 @@
 
   function render() {
     var state = read();
-    var size = sizeOf(state);
 
     $("agency-mode").hidden = state.role !== "agency";
     $("guidelines-note").hidden = state.guidelines !== "no";
+    $("guidelines-none-note").hidden = state.guidelines !== "none";
 
-    $("sum-size").textContent = size.label;
-    $("sum-count").textContent = size.named === 0 ? "No pieces listed yet" : size.named === 1 ? "1 piece" : size.named + " pieces";
-    var note;
-    if (size.key === "kit") {
-      note = "Quoted within one working day. Your delivery date comes with the quote.";
-    } else if (size.key === "single") {
-      note = "Fixed fee from " + money(cfg.single) + ". First finished artwork within 24 hours, on working days.";
-    } else {
-      note = "Fixed fee from " + money(cfg.single + cfg.further * (size.count - 1)) + ". First finished artwork within 24 hours, on working days.";
-    }
-    $("sum-note").textContent = note;
-    $("piece-count").innerHTML = size.named === 0 ? "" :
-      (size.named === 1 ? "One piece" : size.named + " pieces") + ": that reads as a <em>" + size.label + ".</em>";
+    $("sum-size").textContent = countWords(countOf(state));
 
+    /* A brand with no guidelines can still start: we write the rules down ourselves. */
     var clock = {
       reference: Boolean(state.reference),
-      guidelines: state.guidelines === "yes",
+      guidelines: state.guidelines === "yes" || state.guidelines === "none",
       copy: state.copy === "yes",
       specs: state.specs === "yes"
     };
@@ -201,18 +182,16 @@
       var item = document.querySelector('[data-clock="' + key + '"]');
       if (item) {
         item.classList.toggle("in", clock[key]);
-        item.querySelector(".state").textContent = clock[key] ? "In hand" : "To come";
+        item.querySelector(".state").textContent = !clock[key] ? "To come" :
+          (key === "guidelines" && state.guidelines === "none") ? "We'll write them" : "In hand";
       }
       if (!clock[key]) { missing.push(names[key]); }
     });
     var verdict = $("clock-verdict");
     if (!missing.length) {
-      verdict.innerHTML = size.key === "kit"
-        ? "<strong>All four in hand.</strong> We can quote straight away."
-        : "<strong>All four in hand.</strong> The clock can start as soon as the brief is agreed.";
+      verdict.innerHTML = "<strong>Nothing missing.</strong> We can send your job sheet straight away.";
     } else {
-      verdict.innerHTML = "<strong>Still to come:</strong> " + listWords(missing) + ". Send the brief now. " +
-        (size.key === "kit" ? "We quote once they arrive." : "The clock starts when they arrive.");
+      verdict.innerHTML = "<strong>Still to come:</strong> " + listWords(missing) + ". Send the brief now, and the rest when you have it.";
     }
 
     $("brief-preview").textContent = "To: " + cfg.email + "\nSubject: " + subjectOf(state) + "\n\n" + compose(state);
@@ -239,12 +218,12 @@
     form.elements.company.value = saved.company || "";
     setRadio("role", saved.role === "agency" ? "agency" : "brand");
     setRadio("mode", saved.mode || "");
+    form.elements.approver.value = saved.approver || "";
     form.elements.reference.value = saved.reference || "";
     form.elements.reference_link.value = saved.link || "";
     setRadio("guidelines", saved.guidelines || "");
     setRadio("copy", saved.copy || "");
     setRadio("specs", saved.specs || "");
-    form.elements.whole.checked = Boolean(saved.whole);
     form.elements.due.value = saved.due || "";
     form.elements.notes.value = saved.notes || "";
     list.innerHTML = "";
@@ -393,10 +372,17 @@
   var hadDraft = restore();
   if (!hadDraft) { addPiece(null, false); }
 
+  /* A link from the catalogue arrives with its piece already on the list. */
   var query = new URLSearchParams(window.location.search);
-  var wanted = Math.min(12, parseInt(query.get("pieces"), 10) || 0);
-  while (list.children.length < wanted) { addPiece(null, false); }
-  if (query.get("kit") === "1") { form.elements.whole.checked = true; }
+  var item = (query.get("item") || "").trim().slice(0, 60);
+  if (item) {
+    var names = [].map.call(list.querySelectorAll('[name="piece_name"]'), function (input) { return input.value.trim(); });
+    if (names.indexOf(item) === -1) {
+      var empty = names.indexOf("");
+      if (empty === -1) { addPiece({ name: item }, false); } else { list.children[empty].querySelector('[name="piece_name"]').value = item; }
+      save();
+    }
+  }
   if (query.get("from") === "agency") { setRadio("role", "agency"); }
 
   render();

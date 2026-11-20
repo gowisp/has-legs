@@ -1,0 +1,14 @@
+<svg viewBox="0 0 360 250" role="img" aria-label="Two business cards in Verlane Bank's look. The back is navy with the bank's name, a yellow sun and the line drawing of hills. The front is paper, with a name in the serif, a short yellow rule and contact details.">
+  <rect x="8" y="8" width="250" height="150" rx="8" fill="#12284C"/>
+  <circle cx="34" cy="38" r="5" fill="#F2B33D"/>
+  <text x="46" y="43.500" class="v-serif" font-size="16" fill="#FBF8F1">Verlane Bank</text>
+  <circle cx="204" cy="72" r="11" fill="#F2B33D"/>
+  <path d="M8 124c30 0 46-22 76-16s40 24 70 12 40-22 68-12 22 8 36 6" fill="none" stroke="#FBF8F1" stroke-width="2" stroke-linecap="round"/>
+  <rect x="102" y="92" width="250" height="150" rx="8" fill="#FBF8F1" stroke="#D9CFBB" stroke-width="1.5"/>
+  <text x="124" y="136" class="v-serif" font-size="22" fill="#12284C">Thandi Mokoena</text>
+  <line x1="125" y1="149" x2="161" y2="149" stroke="#F2B33D" stroke-width="3" stroke-linecap="round"/>
+  <text x="124" y="172" class="v-sans" font-size="10.500" font-weight="700" fill="#12284C">Head of Home Loans</text>
+  <text x="124" y="202" class="v-sans" font-size="9.500" fill="#5C6884">021 555 0142</text>
+  <text x="124" y="217" class="v-sans" font-size="9.500" fill="#5C6884">thandi@verlanebank.example</text>
+  <circle cx="328" cy="216" r="5" fill="#F2B33D"/>
+</svg>

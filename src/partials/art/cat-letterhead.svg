@@ -1,0 +1,24 @@
+<svg viewBox="0 0 300 424" role="img" aria-label="A letterhead in Verlane Bank's look. The bank's name sits top left beside a yellow dot, the address top right, and a thin line drawing of hills runs along the foot of the page.">
+  <rect x="1" y="1" width="298" height="422" rx="5" fill="#FFFFFF" stroke="#DDE2EA" stroke-width="1.5"/>
+  <circle cx="28" cy="34" r="5" fill="#F2B33D"/>
+  <text x="40" y="39.500" class="v-serif" font-size="16" fill="#12284C">Verlane Bank</text>
+  <text x="276" y="30" text-anchor="end" class="v-sans" font-size="7.500" fill="#5C6884">14 Harbour Street, Cape Town</text>
+  <text x="276" y="41" text-anchor="end" class="v-sans" font-size="7.500" fill="#5C6884">verlanebank.example</text>
+  <line x1="24" y1="58" x2="276" y2="58" stroke="#12284C" stroke-width="1.500" stroke-linecap="round"/>
+  <g fill="#DDE2EA">
+    <rect x="24" y="90" width="58" height="5" rx="2.500"/>
+    <rect x="24" y="140" width="252" height="5" rx="2.500"/>
+    <rect x="24" y="153" width="240" height="5" rx="2.500"/>
+    <rect x="24" y="166" width="252" height="5" rx="2.500"/>
+    <rect x="24" y="179" width="150" height="5" rx="2.500"/>
+    <rect x="24" y="206" width="252" height="5" rx="2.500"/>
+    <rect x="24" y="219" width="232" height="5" rx="2.500"/>
+    <rect x="24" y="232" width="252" height="5" rx="2.500"/>
+    <rect x="24" y="245" width="110" height="5" rx="2.500"/>
+    <rect x="24" y="318" width="74" height="5" rx="2.500"/>
+  </g>
+  <rect x="24" y="116" width="86" height="5" rx="2.500" fill="#8D99AE"/>
+  <path d="M26 298c8-16 14-18 16-6s8 4 12-4 8 12 14 2 10-8 22-2" fill="none" stroke="#12284C" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="232" cy="368" r="7" fill="#F2B33D"/>
+  <path d="M24 396c30 0 44-18 70-12s36 20 64 8 38-20 62-8 26 10 56 6" fill="none" stroke="#12284C" stroke-width="1.500" stroke-linecap="round"/>
+</svg>

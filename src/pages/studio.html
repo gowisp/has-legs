@@ -1,6 +1,6 @@
 ---
 title: The studio | Has Legs
-description: Has Legs is a creative extension studio in South Africa. Designer-led, AI-assisted workflows that carry one approved reference across everything you need next.
+description: Has Legs is a creative extension studio in South Africa. Our AI pipeline builds each piece, a designer directs it and signs it off, and every piece passes three checks before you see it.
 path: studio/
 nav: studio
 ---
@@ -16,95 +16,123 @@ nav: studio
   </div>
 </section>
 
+<!-- Why we exist -->
 <section class="flush">
-  <div class="wrap">
-    <p class="eyebrow">Why we exist</p>
-    <p class="manifesto" data-reveal>Work gets approved, loved, and then used <em>once.</em></p>
-    <div class="two-col" data-reveal>
-      <p>A brand spends months getting a piece of creative right. Then the golf day arrives, or the conference, or the in-store promotion, and the pieces for it get made in a hurry by whoever is free. The idea was strong enough to go further. Nobody had the time to take it there.</p>
-      <p>That's the gap we fill. Bring us the work you already love and a brief for what you need next. We work out what makes it distinctive and design the new pieces in that same creative language. The original goes further, and the new work looks like it was always part of the plan.</p>
+  <div class="wrap why">
+    <div>
+      <p class="eyebrow">Why we exist</p>
+      <p class="manifesto" data-reveal>Work gets approved, loved, and then used <em>once.</em></p>
     </div>
+    <p class="why-copy" data-reveal>A brand spends months getting a piece of creative right. Then the golf day arrives, or the conference, or the in-store promotion, and the pieces for it get made in a hurry by whoever is free. The idea was strong enough to go further. Nobody had the time to take it there. That is the gap we fill.</p>
   </div>
 </section>
 
+<!-- How we're built -->
 <section class="band" aria-labelledby="built-title">
   <div class="wrap">
     <p class="eyebrow">How we're built</p>
-    <p class="statement" id="built-title" data-reveal>Designer-led, AI-assisted workflows, <em>designed for scale.</em></p>
+    <p class="statement" id="built-title" data-reveal>Designer-led, AI-powered workflows, <em>designed for scale.</em></p>
     <div class="principles" style="margin-top:clamp(2.2rem,5vw,4rem)">
       <article class="principle" data-reveal>
         <span class="num" aria-hidden="true">01</span>
         <h3>Designer-led</h3>
-        <p>A designer works out what makes your reference distinctive, makes every design decision and signs off every file. One designer takes each job from brief to handover.</p>
+        <p>A designer directs every job. They choose between the routes the pipeline offers, send work back with notes, or take a piece over by hand. Nothing reaches you until they've signed it off.</p>
       </article>
       <article class="principle" data-reveal style="--d:0.08s">
         <span class="num" aria-hidden="true">02</span>
-        <h3>AI-assisted</h3>
-        <p>We built our production workflows around AI from the ground up. It explores more layout routes, tests more variations and rolls a design across more formats than a traditional studio could manage in the same day.</p>
+        <h3>AI-powered</h3>
+        <p>We built our own AI pipeline for this one job. It reads your reference and your brand guidelines, builds each piece and exports the finished files. Where a piece needs a picture, it generates one.</p>
       </article>
       <article class="principle" data-reveal style="--d:0.16s">
         <span class="num" aria-hidden="true">03</span>
         <h3>Designed for scale</h3>
-        <p>Scale, for us, is one reference carried across a whole kit at once: a map, eighteen hole signs, wayfinding and scorecards, all in step. Your creative goes further without losing its thread.</p>
+        <p>Scale, for us, is one reference carried across everything you need at once: a map, eighteen hole signs, wayfinding and scorecards, all in step. Your creative goes further without losing its thread.</p>
       </article>
     </div>
   </div>
 </section>
 
-<section id="promises">
+<!-- The three checks -->
+<section id="checks">
+  <div class="wrap">
+    <div class="section-head split" data-reveal>
+      <p class="eyebrow">Before you see anything</p>
+      <h2 class="own-line">Every piece passes <em>three checks.</em></h2>
+      <p class="lede">A piece that fails any one of them goes back to be rebuilt. And every fault we catch becomes a permanent check, so the same mistake doesn't come back.</p>
+    </div>
+    <ol class="gates" data-reveal>
+      <li class="gate-end"><span class="where">Start</span><strong>The pipeline builds the piece</strong></li>
+      <li class="gate">
+        <span class="num" aria-hidden="true">01</span>
+        <h3>Measured</h3>
+        <p>Size, bleed, colour, resolution and fonts are measured, and every word is matched against your job sheet. Each one is a plain pass or fail.</p>
+      </li>
+      <li class="gate">
+        <span class="num" aria-hidden="true">02</span>
+        <h3>A fresh eye</h3>
+        <p>A separate reviewer that never saw the piece being made compares it with your reference, your signed tearsheet and the job sheet. It has to show evidence for every fault.</p>
+      </li>
+      <li class="gate">
+        <span class="num" aria-hidden="true">03</span>
+        <h3>The designer</h3>
+        <p>A person looks last. If it isn't right, they direct a redo or finish the piece by hand. Then they sign it off.</p>
+      </li>
+      <li class="gate-end you"><span class="where">Then</span><strong>The proof goes to you</strong></li>
+    </ol>
+  </div>
+</section>
+
+<!-- Promises -->
+<section class="flush" id="promises">
   <div class="wrap faq-grid">
     <div class="section-head" data-reveal>
       <p class="eyebrow">How we use AI, and your work</p>
-      <h2>Six things <em>we hold to.</em></h2>
+      <h2>Five things <em>we hold to.</em></h2>
       <p class="muted">What a brand team should know before it hands over its work. Stated up front.</p>
     </div>
     <ul class="promises">
       <li data-reveal>
         {{> icon-tick.svg}}
         <strong>A designer signs off every file.</strong>
-        <span>AI helps us explore and produce. A person makes the calls and puts their name to the result.</span>
+        <span>The pipeline builds. A person makes the calls and puts their name to the result.</span>
       </li>
       <li data-reveal>
         {{> icon-tick.svg}}
-        <strong>Approved tools only.</strong>
-        <span>Our designers work only in tools the studio has approved, set so that your material is not used to train AI models.</span>
+        <strong>Your material doesn't train AI.</strong>
+        <span>The AI services we build with are set so that your material is not used to train their models.</span>
+      </li>
+      <li data-reveal>
+        {{> icon-tick.svg}}
+        <strong>We tell you what was generated.</strong>
+        <span>Where a piece uses an AI-generated picture, the proof says which ones, so you approve them knowingly.</span>
       </li>
       <li data-reveal>
         {{> icon-tick.svg}}
         <strong>Your artwork is yours.</strong>
-        <span>The finished artwork belongs to you once it's paid for. We keep a copy in your brand file so your next brief starts from it.</span>
+        <span>The finished artwork belongs to you once it's paid for.</span>
       </li>
       <li data-reveal>
         {{> icon-tick.svg}}
         <strong>Nothing is shown without permission.</strong>
         <span>We don't show client work publicly unless the client says we can. That's why the work on this site is demonstrations on invented brands.</span>
       </li>
-      <li data-reveal>
-        {{> icon-tick.svg}}
-        <strong>We don't guess at a brand.</strong>
-        <span>No brand guidelines, no start. It keeps your brand from being applied at random.</span>
-      </li>
-      <li data-reveal>
-        {{> icon-tick.svg}}
-        <strong>Idea work goes back to your agency.</strong>
-        <span>We don't do campaigns, identities or logos, and we aren't after anyone's account.</span>
-      </li>
     </ul>
   </div>
 </section>
 
-<section class="flush">
+<!-- The fair question -->
+<section class="flush" id="why-not-ai">
   <div class="wrap">
     <div class="duo first">
-      <div class="panel" data-reveal>
-        <h3>Who does the work</h3>
-        <p>Has Legs works with a pool of designers, not one name on the door. Every job gets one designer from brief to handover.</p>
-        <p>Your brand file carries the memory between jobs, so whichever designer picks up your next brief starts from what you've already approved.</p>
+      <div class="panel ink" data-reveal>
+        <p class="pull">Why wouldn't we just use AI ourselves?</p>
+        <p style="margin-top:1.2rem">You could. You could also service your own car: buy the parts, learn the engine, give up your weekend. Most people don't, because it isn't their job and the garage gets it right the first time.</p>
+        <p>We keep up with the tools, we've built the workflows, and a designer signs off every file. You get on with more pressing matters.</p>
       </div>
-      <div class="panel ink" data-reveal style="--d:0.08s">
+      <div class="panel" data-reveal style="--d:0.08s">
         <h3>Where we work</h3>
-        <p>We're based in South Africa. We quote in rand, and the 24-hour clock runs on South African working days.</p>
-        <p style="margin-top:1.4rem"><a class="link" href="{{root}}how-it-works/">How it works, step by step {{> icon-arrow.svg}}</a></p>
+        <p>We're based in South Africa, we work in South African English, and our fees are in rand.</p>
+        <p style="margin-top:1.4rem"><a class="link" href="{{root}}how-it-works/">How a job runs, step by step {{> icon-arrow.svg}}</a></p>
       </div>
     </div>
   </div>

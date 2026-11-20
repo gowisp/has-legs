@@ -59,7 +59,6 @@ def main():
 
     site = json.loads((ROOT / "site.json").read_text(encoding="utf-8"))
     base = site["base_path"]
-    prices = site["prices"]
 
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
         web_root = Path(tmp) / "web"
@@ -74,14 +73,7 @@ def main():
         handler = functools.partial(Quiet, directory=str(web_root))
         server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
         threading.Thread(target=server.serve_forever, daemon=True).start()
-        query = urlencode({
-            "base": base,
-            "email": site["email"],
-            "single": prices["single_from"],
-            "further": prices["each_further_piece_from"],
-            "setmax": prices["set_max_pieces"],
-            "cur": prices["currency"],
-        })
+        query = urlencode({"base": base, "email": site["email"]})
         url = f"http://127.0.0.1:{server.server_address[1]}/_checks.html?{query}"
         try:
             run = subprocess.run(

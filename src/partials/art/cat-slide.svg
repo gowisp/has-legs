@@ -1,0 +1,19 @@
+<svg viewBox="0 0 480 270" role="img" aria-label="A presentation slide in Verlane Bank's look. A serif title reads The year in numbers, above a bar chart in navy whose last and tallest bar is yellow.">
+  <rect x="1" y="1" width="478" height="268" rx="8" fill="#FFFFFF" stroke="#DDE2EA" stroke-width="1.5"/>
+  <text x="28" y="50" class="v-serif" font-size="26" fill="#12284C">The year in numbers</text>
+  <line x1="29" y1="66" x2="85" y2="66" stroke="#F2B33D" stroke-width="3" stroke-linecap="round"/>
+  <rect x="40" y="154" width="42" height="60" rx="3" fill="#12284C"/>
+  <rect x="102" y="134" width="42" height="80" rx="3" fill="#12284C"/>
+  <rect x="164" y="142" width="42" height="72" rx="3" fill="#12284C"/>
+  <rect x="226" y="112" width="42" height="102" rx="3" fill="#12284C"/>
+  <rect x="288" y="90" width="42" height="124" rx="3" fill="#F2B33D"/>
+  <line x1="28" y1="214" x2="342" y2="214" stroke="#12284C" stroke-width="2" stroke-linecap="round"/>
+  <g class="v-sans" font-size="10" fill="#5C6884" text-anchor="middle">
+    <text x="61" y="231">2023</text><text x="123" y="231">2024</text><text x="185" y="231">2025</text><text x="247" y="231">2026</text><text x="309" y="231">2027</text>
+  </g>
+  <text x="368" y="128" class="v-serif" font-size="38" fill="#12284C">+18%</text>
+  <text x="369" y="148" class="v-sans" font-size="11" fill="#5C6884">Home loans,</text>
+  <text x="369" y="163" class="v-sans" font-size="11" fill="#5C6884">year on year</text>
+  <text x="29" y="254" class="v-sans" font-size="9.500" fill="#8A93A8">Verlane Bank</text>
+  <text x="441" y="254" class="v-sans" font-size="9.500" fill="#8A93A8">07</text>
+</svg>
